@@ -38,6 +38,14 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^4.0.0
+  flutter_launcher_icons: ^0.13.1
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "icon.png"
+  adaptive_icon_background: "#2E7D32"
+  adaptive_icon_foreground: "icon.png"
 
 flutter:
   uses-material-design: true
