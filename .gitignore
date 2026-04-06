@@ -1,0 +1,32 @@
+# Flutter
+.dart_tool/
+.packages
+build/
+*.iml
+
+# Android
+.gradle/
+android/app/google-services.json
+local.properties
+
+# iOS
+ios/Flutter/Debug.xcconfig
+ios/Flutter/Release.xcconfig
+ios/Runner.xcworkspace/
+ios/Runner.xcodeproj/
+GoogleService-Info.plist
+
+# IDE
+.idea/
+*.code-workspace
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Firebase
+firebase-debug.log
+
+# PDF exports
+*.pdf

@@ -1,0 +1,29 @@
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "eco-habit-diary-demo",
+          "appId": "1:000000000000:android:0000000000000000",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "ios": {
+        "default": {
+          "projectId": "eco-habit-diary-demo",
+          "appId": "1:000000000000:ios:0000000000000000",
+          "uploadDebugSymbols": false
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "eco-habit-diary-demo",
+          "configurations": {
+            "android": "1:000000000000:android:0000000000000000",
+            "ios": "1:000000000000:ios:0000000000000000"
+          }
+        }
+      }
+    }
+  }
+}
