@@ -3,6 +3,7 @@
 .packages
 build/
 *.iml
+lib/firebase_options.dart
 
 # Android
 .gradle/
