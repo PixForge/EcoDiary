@@ -67,47 +67,26 @@ class HomeScreen extends StatelessWidget {
       body: SafeArea(
         child: Column(
         children: [
-          // Выбор даты
+          // Прогресс выполнения за день
           Container(
-            padding: const EdgeInsets.all(16),
-            color: theme.colorScheme.primaryContainer.withOpacity(0.3),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            child: Column(
               children: [
-                IconButton(
-                  icon: const Icon(Icons.chevron_left),
-                  onPressed: context.read<StatsProvider>().goToPreviousDay,
+                LinearProgressIndicator(
+                  value: completionPercent / 100,
+                  backgroundColor: Colors.grey[200],
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                    completionPercent == 100
+                        ? Colors.green
+                        : theme.colorScheme.primary,
+                  ),
                 ),
-                Column(
-                  children: [
-                    Text(
-                      isToday ? 'Сегодня' : DateFormat('d MMMM yyyy', 'ru').format(selectedDate),
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    LinearProgressIndicator(
-                      value: completionPercent / 100,
-                      backgroundColor: Colors.grey[200],
-                      valueColor: AlwaysStoppedAnimation<Color>(
-                        completionPercent == 100
-                            ? Colors.green
-                            : theme.colorScheme.primary,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      '${completionPercent.toStringAsFixed(0)}% выполнено',
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: Colors.grey[600],
-                      ),
-                    ),
-                  ],
-                ),
-                IconButton(
-                  icon: const Icon(Icons.chevron_right),
-                  onPressed: isToday ? null : context.read<StatsProvider>().goToNextDay,
+                const SizedBox(height: 4),
+                Text(
+                  '${completionPercent.toStringAsFixed(0)}% выполнено сегодня',
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: Colors.grey[600],
+                  ),
                 ),
               ],
             ),
