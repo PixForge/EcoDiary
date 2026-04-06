@@ -98,7 +98,7 @@ class AuthWrapper extends StatelessWidget {
     final authProvider = context.watch<AuthProvider>();
 
     if (authProvider.isLoggedIn) {
-      return const MainNavigationScreen();
+      return MainNavigationScreen(key: navigationKey);
     } else {
       return const LoginScreen();
     }

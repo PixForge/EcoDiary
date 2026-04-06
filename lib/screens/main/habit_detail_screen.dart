@@ -14,14 +14,17 @@ class HabitDetailScreen extends StatefulWidget {
 }
 
 class _HabitDetailScreenState extends State<HabitDetailScreen> {
-  List<int> _selectedDays = [];
+  // null = ежедневно (пустой список), иначе конкретные дни
+  List<int>? _selectedDays; // null означает "каждый день"
   bool _reminderEnabled = false;
   TimeOfDay? _reminderTime;
 
   @override
   void initState() {
     super.initState();
-    _selectedDays = List.from(widget.habit.scheduledDaysOfWeek);
+    final days = widget.habit.scheduledDaysOfWeek;
+    // Если список пустой — значит "каждый день" (null)
+    _selectedDays = days.isEmpty ? null : List.from(days);
     _reminderEnabled = widget.habit.reminderEnabled;
     if (widget.habit.reminderTime != null) {
       _reminderTime = TimeOfDay.fromDateTime(widget.habit.reminderTime!);
@@ -32,7 +35,8 @@ class _HabitDetailScreenState extends State<HabitDetailScreen> {
     try {
       final success = await context.read<HabitProvider>().addHabitFromCatalog(
             widget.habit,
-            scheduledDaysOfWeek: _selectedDays,
+            // null = каждый день → передаём пустой список
+            scheduledDaysOfWeek: _selectedDays ?? [],
             reminderTime: _reminderTime != null
                 ? DateTime(
                     DateTime.now().year,
@@ -271,20 +275,32 @@ class _HabitDetailScreenState extends State<HabitDetailScreen> {
   }
 
   Widget _dayChip(String label, int day) {
-    final isSelected = _selectedDays.isEmpty || _selectedDays.contains(day);
+    // null = каждый день → все чипы выбраны
+    final isSelected = _selectedDays == null || _selectedDays!.contains(day);
     return FilterChip(
       label: Text(label),
       selected: isSelected,
       onSelected: (selected) {
         setState(() {
-          if (_selectedDays.isEmpty) {
-            // Если было "ежедневно", то снимаем все кроме выбранного
-            _selectedDays = selected ? [day] : [];
+          if (_selectedDays == null) {
+            // Переходим из режима "каждый день" в конкретные дни:
+            // выбираем все дни кроме снятого
+            _selectedDays = [1, 2, 3, 4, 5, 6, 7]
+                .where((d) => d != day)
+                .toList();
           } else {
             if (selected) {
-              _selectedDays.add(day);
+              _selectedDays!.add(day);
+              // Если выбраны все 7 дней — возвращаемся в режим "каждый день"
+              if (_selectedDays!.length == 7) {
+                _selectedDays = null;
+              }
             } else {
-              _selectedDays.remove(day);
+              _selectedDays!.remove(day);
+              // Если не осталось ни одного дня — сбрасываем в "каждый день"
+              if (_selectedDays!.isEmpty) {
+                _selectedDays = null;
+              }
             }
           }
         });

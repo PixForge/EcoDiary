@@ -7,6 +7,7 @@ import '../../widgets/habit_tile.dart';
 import 'profile_screen.dart';
 import 'eco_impact_screen.dart';
 import 'achievements_screen.dart';
+import 'main_navigation_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -122,9 +123,11 @@ class HomeScreen extends StatelessWidget {
                     itemBuilder: (context, index) {
                       final habit = todayHabits[index];
                       return HabitTile(
+                        key: ValueKey('${habit.id}_${selectedDate.toIso8601String()}'),
                         habit: habit,
                         date: selectedDate,
                         onToggle: () {
+                          print('[HomeScreen] onToggle: habit="${habit.title}", date=$selectedDate');
                           context.read<HabitProvider>().toggleHabitCompletion(
                                 habit,
                                 selectedDate,
@@ -179,8 +182,8 @@ class HomeScreen extends StatelessWidget {
                 padding: const EdgeInsets.only(top: 24),
                 child: ElevatedButton.icon(
                   onPressed: () {
-                    // Переключиться на вкладку каталога
-                    Navigator.pop(context);
+                    // Переключиться на вкладку каталога (индекс 1)
+                    navigationKey.currentState?.switchToTab(1);
                   },
                   icon: const Icon(Icons.add),
                   label: const Text('Добавить привычки'),

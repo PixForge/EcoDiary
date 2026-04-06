@@ -4,14 +4,18 @@ import 'home_screen.dart';
 import 'catalog_screen.dart';
 import 'stats_screen.dart';
 
+// Глобальный ключ для доступа к состоянию навигации из любого места
+final GlobalKey<MainNavigationScreenState> navigationKey =
+    GlobalKey<MainNavigationScreenState>();
+
 class MainNavigationScreen extends StatefulWidget {
   const MainNavigationScreen({super.key});
 
   @override
-  State<MainNavigationScreen> createState() => _MainNavigationScreenState();
+  State<MainNavigationScreen> createState() => MainNavigationScreenState();
 }
 
-class _MainNavigationScreenState extends State<MainNavigationScreen> {
+class MainNavigationScreenState extends State<MainNavigationScreen> {
   int _currentIndex = 0;
 
   final List<Widget> _screens = [
@@ -19,6 +23,17 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     const CatalogScreen(),
     const StatsScreen(),
   ];
+
+  // Метд для переключения вкладок извне
+  void switchToTab(int index) {
+    if (index >= 0 && index < _screens.length) {
+      setState(() {
+        _currentIndex = index;
+      });
+    }
+  }
+
+  int get currentIndex => _currentIndex;
 
   @override
   Widget build(BuildContext context) {

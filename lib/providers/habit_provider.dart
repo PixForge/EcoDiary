@@ -60,9 +60,13 @@ class HabitProvider extends ChangeNotifier {
     print('[HabitProvider] getHabitsForDay: date=$date, dayOfWeek=$dayOfWeek, всего _habits: ${_habits.length}');
 
     final filtered = _habits.where((habit) {
-      print('[HabitProvider]   habit: ${habit.title}, isArchived=${habit.isArchived}, scheduledDays=${habit.scheduledDaysOfWeek}, scheduledForDay=${habit.isScheduledForDay(dayOfWeek)}');
-      if (habit.isArchived) return false;
-      return habit.isScheduledForDay(dayOfWeek);
+      final isNotArchived = !habit.isArchived;
+      final isScheduled = habit.isScheduledForDay(dayOfWeek);
+      print('[HabitProvider]   habit: "${habit.title}", id=${habit.id}, isArchived=${habit.isArchived}, scheduledDays=${habit.scheduledDaysOfWeek}, scheduledForDay=$isScheduled, included=${isNotArchived && isScheduled}');
+      if (isNotArchived) {
+        return isScheduled;
+      }
+      return false;
     }).toList();
 
     print('[HabitProvider] getHabitsForDay результат: ${filtered.length} привычек');
@@ -82,12 +86,17 @@ class HabitProvider extends ChangeNotifier {
       return false;
     }
 
+    // Гарантируем, что scheduledDaysOfWeek — пустой список для ежедневных привычек
+    final List<int> days = (scheduledDaysOfWeek == null || scheduledDaysOfWeek.isEmpty)
+        ? <int>[]
+        : scheduledDaysOfWeek;
+
     final newHabit = Habit(
       id: catalogHabit.id,
       title: catalogHabit.title,
       description: catalogHabit.description,
       category: catalogHabit.category,
-      scheduledDaysOfWeek: scheduledDaysOfWeek ?? [],
+      scheduledDaysOfWeek: days,
       reminderTime: reminderTime,
       reminderEnabled: reminderEnabled ?? false,
       waterSavedLiters: catalogHabit.waterSavedLiters,
@@ -127,18 +136,29 @@ class HabitProvider extends ChangeNotifier {
   /// Отметить привычку на дату
   Future<void> toggleHabitCompletion(Habit habit, DateTime date) async {
     final user = _auth.currentUser;
-    if (user == null) return;
+    if (user == null) {
+      print('[HabitProvider] toggleHabitCompletion: пользователь не авторизован');
+      return;
+    }
+
+    print('[HabitProvider] toggleHabitCompletion: habit="${habit.title}", date=$date, isCompleted=${habit.isCompletedOn(date)}');
 
     Habit updatedHabit;
     if (habit.isCompletedOn(date)) {
       updatedHabit = habit.markUncompleted(date);
+      print('[HabitProvider]   -> снимаем отметку');
     } else {
       updatedHabit = habit.markCompleted(date);
+      print('[HabitProvider]   -> отмечаем как выполненное');
     }
+    
+    print('[HabitProvider]   updatedHabit completedDates keys: ${updatedHabit.completedDates.keys.toList()}');
 
     try {
       await _firestoreService.updateHabit(user.uid, updatedHabit);
+      print('[HabitProvider]   успешно обновлено в Firestore');
     } catch (e) {
+      print('[HabitProvider]   ошибка сохранения: $e');
       _errorMessage = 'Ошибка сохранения';
       notifyListeners();
     }

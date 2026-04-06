@@ -149,6 +149,13 @@ class Habit {
         map['reminderTime']['minute'] as int,
       );
     }
+    // Гарантируем, что scheduledDaysOfWeek никогда не будет null
+    final rawScheduledDays = map['scheduledDaysOfWeek'];
+    List<int> scheduledDays = [];
+    if (rawScheduledDays != null && rawScheduledDays is List) {
+      scheduledDays = rawScheduledDays.cast<int>();
+    }
+    
     return Habit(
       id: map['id'] as String,
       title: map['title'] as String,
@@ -157,8 +164,7 @@ class Habit {
         (e) => e.name == map['category'],
         orElse: () => HabitCategory.waterSaving,
       ),
-      scheduledDaysOfWeek:
-          (map['scheduledDaysOfWeek'] as List<dynamic>?)?.cast<int>() ?? [],
+      scheduledDaysOfWeek: scheduledDays,
       reminderTime: reminderTime,
       reminderEnabled: _toBool(map['reminderEnabled']) ?? false,
       waterSavedLiters: (map['waterSavedLiters'] as num?)?.toDouble() ?? 0,
