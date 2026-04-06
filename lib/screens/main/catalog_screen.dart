@@ -5,6 +5,7 @@ import '../../data/habit_catalog.dart';
 import '../../models/habit_category.dart';
 import '../../models/habit.dart';
 import 'habit_detail_screen.dart';
+import 'create_custom_habit_screen.dart';
 
 class CatalogScreen extends StatefulWidget {
   const CatalogScreen({super.key});
@@ -53,6 +54,18 @@ class _CatalogScreenState extends State<CatalogScreen>
             );
           }).toList(),
         ),
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => const CreateCustomHabitScreen(),
+            ),
+          );
+        },
+        icon: const Icon(Icons.add),
+        label: const Text('Создать привычку'),
       ),
       body: Column(
         children: [

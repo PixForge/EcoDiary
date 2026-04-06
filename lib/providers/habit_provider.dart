@@ -133,6 +133,76 @@ class HabitProvider extends ChangeNotifier {
     }
   }
 
+  /// Создать пользовательскую привычку
+  Future<bool> addCustomHabit({
+    required String title,
+    required String description,
+    required HabitCategory category,
+    List<int>? scheduledDaysOfWeek,
+    double waterSavedLiters = 0,
+    double energySavedKwh = 0,
+    double co2SavedKg = 0,
+    DateTime? reminderTime,
+    bool? reminderEnabled,
+  }) async {
+    final user = _auth.currentUser;
+    if (user == null) {
+      _errorMessage = 'Пользователь не авторизован';
+      notifyListeners();
+      return false;
+    }
+
+    // Гарантируем, что scheduledDaysOfWeek — пустой список для ежедневных привычек
+    final List<int> days = (scheduledDaysOfWeek == null || scheduledDaysOfWeek.isEmpty)
+        ? <int>[]
+        : scheduledDaysOfWeek;
+
+    // Генерируем уникальный ID для пользовательской привычки
+    final timestamp = DateTime.now().millisecondsSinceEpoch;
+    final customId = 'custom_${user.uid}_${timestamp}';
+
+    final newHabit = Habit(
+      id: customId,
+      title: title,
+      description: description,
+      category: category,
+      scheduledDaysOfWeek: days,
+      reminderTime: reminderTime,
+      reminderEnabled: reminderEnabled ?? false,
+      waterSavedLiters: waterSavedLiters,
+      energySavedKwh: energySavedKwh,
+      co2SavedKg: co2SavedKg,
+    );
+
+    try {
+      print('[HabitProvider] Создаю пользовательскую привычку: ${newHabit.title} для пользователя ${user.uid}');
+      final docId = await _firestoreService.addHabit(user.uid, newHabit);
+      print('[HabitProvider] Пользовательская привычка создана с docId: $docId');
+
+      // Запланировать напоминание
+      if (reminderEnabled == true && reminderTime != null) {
+        try {
+          await _notificationService.scheduleHabitReminder(
+            id: docId.hashCode % 100000,
+            title: 'Напоминание: ${newHabit.title}',
+            description: 'Пора отметить выполнение привычки!',
+            reminderTime: reminderTime,
+          );
+        } catch (notifError) {
+          print('[HabitProvider] Ошибка напоминания: $notifError');
+        }
+      }
+
+      return true;
+    } catch (e, stackTrace) {
+      print('[HabitProvider] Ошибка создания пользовательской привычки: $e');
+      print('[HabitProvider] StackTrace: $stackTrace');
+      _errorMessage = 'Ошибка создания привычки: $e';
+      notifyListeners();
+      return false;
+    }
+  }
+
   /// Отметить привычку на дату
   Future<void> toggleHabitCompletion(Habit habit, DateTime date) async {
     final user = _auth.currentUser;
