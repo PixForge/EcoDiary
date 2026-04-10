@@ -119,6 +119,7 @@ class StatsScreen extends StatelessWidget {
                           return FlSpot(e.key.toDouble(), e.value['percent'] as double);
                         }).toList(),
                         isCurved: true,
+                        curveSmoothing: 0.1,
                         color: Colors.green,
                         barWidth: 3,
                         dotData: const FlDotData(show: true),
@@ -187,6 +188,7 @@ class StatsScreen extends StatelessWidget {
                           return FlSpot(e.key.toDouble(), e.value['percent'] as double);
                         }).toList(),
                         isCurved: true,
+                        curveSmoothing: 0.1,
                         color: Colors.blue,
                         barWidth: 2,
                         dotData: const FlDotData(show: false),
