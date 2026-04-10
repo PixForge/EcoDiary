@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/theme_provider.dart';
 import '../../services/notification_service.dart';
+import 'export_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -199,6 +200,32 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
           ),
 
+          const SizedBox(height: 8),
+
+          // Язык
+          Card(
+            child: ListTile(
+              leading: const Icon(Icons.language),
+              title: const Text('Язык приложения'),
+              subtitle: Text(
+                themeProvider.languageCode == 'ru' ? 'Русский' : 'English',
+              ),
+              trailing: DropdownButton<String>(
+                value: themeProvider.languageCode,
+                underline: const SizedBox(),
+                items: const [
+                  DropdownMenuItem(value: 'ru', child: Text('Русский')),
+                  DropdownMenuItem(value: 'en', child: Text('English')),
+                ],
+                onChanged: (value) {
+                  if (value != null) {
+                    themeProvider.setLanguage(value);
+                  }
+                },
+              ),
+            ),
+          ),
+
           const SizedBox(height: 16),
 
           // Аккаунт
@@ -211,6 +238,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
               title: const Text('Сменить пароль'),
               trailing: const Icon(Icons.chevron_right),
               onTap: _changePassword,
+            ),
+          ),
+
+          const SizedBox(height: 8),
+
+          // Экспорт в PDF
+          Card(
+            child: ListTile(
+              leading: const Icon(Icons.picture_as_pdf),
+              title: const Text('Экспорт в PDF'),
+              subtitle: const Text('Отчёт по привычкам и эко-эффекту'),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const ExportScreen()),
+                );
+              },
             ),
           ),
 
