@@ -4,7 +4,6 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:intl/intl.dart';
 import '../../providers/habit_provider.dart';
 import '../../providers/stats_provider.dart';
-import '../../helpers/localization.dart';
 import '../../models/habit_category.dart';
 
 class StatsScreen extends StatelessWidget {
