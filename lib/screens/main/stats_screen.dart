@@ -118,8 +118,7 @@ class StatsScreen extends StatelessWidget {
                         spots: weekData.asMap().entries.map((e) {
                           return FlSpot(e.key.toDouble(), e.value['percent'] as double);
                         }).toList(),
-                        isCurved: true,
-                        curveSmoothing: 0.1,
+                        isCurved: false,
                         color: Colors.green,
                         barWidth: 3,
                         dotData: const FlDotData(show: true),
@@ -187,8 +186,7 @@ class StatsScreen extends StatelessWidget {
                         spots: monthData.asMap().entries.map((e) {
                           return FlSpot(e.key.toDouble(), e.value['percent'] as double);
                         }).toList(),
-                        isCurved: true,
-                        curveSmoothing: 0.1,
+                        isCurved: false,
                         color: Colors.blue,
                         barWidth: 2,
                         dotData: const FlDotData(show: false),

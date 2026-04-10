@@ -189,8 +189,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
               subtitle: const Text('Проверить работу уведомлений'),
               onTap: () async {
                 await NotificationService().showTestNotification();
+                final messenger = ScaffoldMessenger.of(context);
                 if (mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
+                  messenger.showSnackBar(
                     const SnackBar(
                       content: Text('Уведомление отправлено'),
                     ),
