@@ -1,3 +1,5 @@
+import 'dart:io';
+import 'package:flutter/services.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
@@ -8,6 +10,22 @@ import 'impact_calc_service.dart';
 /// Сервис экспорта данных в PDF
 class ExportService {
   final ImpactCalcService _impactCalc = ImpactCalcService();
+  pw.Font? _font;
+  pw.Font? _fontBold;
+
+  /// Загрузить шрифты с поддержкой кириллицы
+  Future<void> _loadFonts() async {
+    if (_font != null) return;
+    try {
+      final regular = await rootBundle.load('lib/assets/Roboto-Regular.ttf');
+      _font = pw.Font.ttf(regular);
+      _fontBold = _font; // Используем тот же шрифт для простоты
+    } catch (e) {
+      // Fallback: используем Helvetica (без кириллицы, но хотя бы не упадёт)
+      _font = pw.Font.helvetica();
+      _fontBold = pw.Font.helveticaBold();
+    }
+  }
 
   /// Создать и показать PDF-отчёт
   Future<void> exportReport({
@@ -16,8 +34,11 @@ class ExportService {
     required DateTime endDate,
     required int longestStreak,
   }) async {
+    await _loadFonts();
     final pdf = pw.Document();
     final impact = _impactCalc.calculateTotalImpact(habits, startDate, endDate);
+    final f = _font!;
+    final fBold = _fontBold!;
 
     // Рассчитать статистику
     final totalCompletions = habits.fold<int>(
@@ -45,14 +66,16 @@ class ExportService {
                   style: pw.TextStyle(
                     fontSize: 28,
                     fontWeight: pw.FontWeight.bold,
+                    font: fBold,
                     color: PdfColors.green800,
                   ),
                 ),
                 pw.SizedBox(height: 4),
                 pw.Text(
                   'Отчёт: ${_formatDate(startDate)} — ${_formatDate(endDate)}',
-                  style: const pw.TextStyle(
+                  style: pw.TextStyle(
                     fontSize: 14,
+                    font: f,
                     color: PdfColors.grey700,
                   ),
                 ),
@@ -69,10 +92,10 @@ class ExportService {
             child: pw.Row(
               mainAxisAlignment: pw.MainAxisAlignment.spaceAround,
               children: [
-                _statCard('Привычек', '$scheduledHabits'),
-                _statCard('Выполнено', '$totalCompletions'),
-                _statCard('Процент', '${completionRate.toStringAsFixed(1)}%'),
-                _statCard('Серия', '$longestStreak дн.'),
+                _statCard(f, fBold, 'Привычек', '$scheduledHabits'),
+                _statCard(f, fBold, 'Выполнено', '$totalCompletions'),
+                _statCard(f, fBold, 'Процент', '${completionRate.toStringAsFixed(1)}%'),
+                _statCard(f, fBold, 'Серия', '$longestStreak дн.'),
               ],
             ),
           ),
@@ -88,17 +111,17 @@ class ExportService {
               children: [
                 pw.Text(
                   '💧 Воды сохранено: ${impact.waterSavedLiters.toStringAsFixed(1)} литров',
-                  style: const pw.TextStyle(fontSize: 14),
+                  style: pw.TextStyle(fontSize: 14, font: f),
                 ),
                 pw.SizedBox(height: 5),
                 pw.Text(
                   '⚡ Энергии сэкономлено: ${impact.energySavedKwh.toStringAsFixed(1)} кВт·ч',
-                  style: const pw.TextStyle(fontSize: 14),
+                  style: pw.TextStyle(fontSize: 14, font: f),
                 ),
                 pw.SizedBox(height: 5),
                 pw.Text(
                   '🌬️ CO₂ предотвращено: ${impact.co2SavedKg.toStringAsFixed(1)} кг',
-                  style: const pw.TextStyle(fontSize: 14),
+                  style: pw.TextStyle(fontSize: 14, font: f),
                 ),
               ],
             ),
@@ -115,22 +138,22 @@ class ExportService {
               children: [
                 pw.Text(
                   '🌳 Деревьев (поглощение CO₂): ${_impactCalc.co2ToTrees(impact.co2SavedKg).toStringAsFixed(1)}',
-                  style: const pw.TextStyle(fontSize: 14),
+                  style: pw.TextStyle(fontSize: 14, font: f),
                 ),
                 pw.SizedBox(height: 5),
                 pw.Text(
                   '🚗 Км на авто (эквивалент CO₂): ${_impactCalc.co2ToCarKm(impact.co2SavedKg).toStringAsFixed(0)} км',
-                  style: const pw.TextStyle(fontSize: 14),
+                  style: pw.TextStyle(fontSize: 14, font: f),
                 ),
                 pw.SizedBox(height: 5),
                 pw.Text(
                   '💡 Часов работы LED-лампы: ${_impactCalc.energyToLedHours(impact.energySavedKwh).toStringAsFixed(0)} ч',
-                  style: const pw.TextStyle(fontSize: 14),
+                  style: pw.TextStyle(fontSize: 14, font: f),
                 ),
                 pw.SizedBox(height: 5),
                 pw.Text(
                   '🛒 Ванн (эквивалент воды): ${_impactCalc.waterToBaths(impact.waterSavedLiters).toStringAsFixed(1)}',
-                  style: const pw.TextStyle(fontSize: 14),
+                  style: pw.TextStyle(fontSize: 14, font: f),
                 ),
               ],
             ),
@@ -163,14 +186,14 @@ class ExportService {
                       padding: const pw.EdgeInsets.all(4),
                       child: pw.Text(
                         habit.title,
-                        style: const pw.TextStyle(fontSize: 11),
+                        style: pw.TextStyle(fontSize: 11, font: f),
                       ),
                     ),
                     pw.Padding(
                       padding: const pw.EdgeInsets.all(4),
                       child: pw.Text(
                         habit.category.icon,
-                        style: const pw.TextStyle(fontSize: 12),
+                        style: pw.TextStyle(fontSize: 12, font: f),
                         textAlign: pw.TextAlign.center,
                       ),
                     ),
@@ -179,6 +202,7 @@ class ExportService {
                       child: pw.Text(
                         '${habit.completedDates.length}',
                         textAlign: pw.TextAlign.center,
+                        style: pw.TextStyle(font: f),
                       ),
                     ),
                   ],
@@ -191,8 +215,9 @@ class ExportService {
           child: pw.Text(
             'Создано в приложении «Дневник экологических привычек»',
             textAlign: pw.TextAlign.center,
-            style: const pw.TextStyle(
+            style: pw.TextStyle(
               fontSize: 10,
+              font: _font,
               color: PdfColors.grey600,
             ),
           ),
@@ -206,7 +231,7 @@ class ExportService {
     );
   }
 
-  pw.Widget _statCard(String label, String value) {
+  pw.Widget _statCard(pw.Font f, pw.Font fBold, String label, String value) {
     return pw.Container(
       padding: const pw.EdgeInsets.all(12),
       decoration: pw.BoxDecoration(
@@ -221,14 +246,16 @@ class ExportService {
             style: pw.TextStyle(
               fontSize: 22,
               fontWeight: pw.FontWeight.bold,
+              font: fBold,
               color: PdfColors.green800,
             ),
           ),
           pw.SizedBox(height: 4),
           pw.Text(
             label,
-            style: const pw.TextStyle(
+            style: pw.TextStyle(
               fontSize: 11,
+              font: f,
               color: PdfColors.grey700,
             ),
           ),
@@ -238,6 +265,7 @@ class ExportService {
   }
 
   pw.Widget _headerCell(String text) {
+    final fBold = _fontBold!;
     return pw.Padding(
       padding: const pw.EdgeInsets.all(6),
       child: pw.Text(
@@ -245,6 +273,7 @@ class ExportService {
         style: pw.TextStyle(
           fontWeight: pw.FontWeight.bold,
           fontSize: 11,
+          font: fBold,
         ),
       ),
     );
