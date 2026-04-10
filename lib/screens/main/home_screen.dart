@@ -68,12 +68,12 @@ class HomeScreen extends StatelessWidget {
         children: [
           // Прогресс выполнения за день
           Container(
-            padding: const EdgeInsets.all(24),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 colors: [
-                  theme.colorScheme.primaryContainer.withValues(alpha: 0.5),
-                  theme.colorScheme.primaryContainer.withValues(alpha: 0.1),
+                  theme.colorScheme.primaryContainer.withValues(alpha: 0.4),
+                  theme.colorScheme.primaryContainer.withValues(alpha: 0.05),
                 ],
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
@@ -81,57 +81,49 @@ class HomeScreen extends StatelessWidget {
             ),
             child: Column(
               children: [
-                // Круговой прогресс-индикатор
-                SizedBox(
-                  width: 140,
-                  height: 140,
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      TweenAnimationBuilder<double>(
-                        tween: Tween(begin: 0, end: completionPercent / 100),
-                        duration: const Duration(milliseconds: 800),
-                        curve: Curves.easeOutCubic,
-                        builder: (context, value, _) {
-                          return SizedBox(
-                            width: 140,
-                            height: 140,
-                            child: CircularProgressIndicator(
-                              value: value,
-                              strokeWidth: 12,
-                              backgroundColor: Colors.grey[200],
-                              valueColor: AlwaysStoppedAnimation<Color>(
-                                completionPercent == 100
-                                    ? const Color(0xFF2E7D32)
-                                    : theme.colorScheme.primary,
-                              ),
-                            ),
-                          );
-                        },
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      completionPercent == 100 ? '✓ Всё выполнено!' : 'Прогресс на сегодня',
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: completionPercent == 100
+                            ? const Color(0xFF2E7D32)
+                            : null,
                       ),
-                      Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            '${completionPercent.toStringAsFixed(0)}%',
-                            style: theme.textTheme.headlineMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              color: completionPercent == 100
-                                  ? const Color(0xFF2E7D32)
-                                  : theme.colorScheme.primary,
-                            ),
-                          ),
-                          Text(
-                            completionPercent == 100 ? '✓ Всё!' : 'выполнено',
-                            style: theme.textTheme.bodySmall?.copyWith(
-                              color: Colors.grey[600],
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ],
+                    ),
+                    Text(
+                      '${completionPercent.toStringAsFixed(0)}%',
+                      style: theme.textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: completionPercent == 100
+                            ? const Color(0xFF2E7D32)
+                            : theme.colorScheme.primary,
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                TweenAnimationBuilder<double>(
+                  tween: Tween(begin: 0, end: completionPercent / 100),
+                  duration: const Duration(milliseconds: 800),
+                  curve: Curves.easeOutCubic,
+                  builder: (context, value, _) {
+                    return ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: LinearProgressIndicator(
+                        value: value,
+                        minHeight: 14,
+                        backgroundColor: Colors.grey[200],
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          completionPercent == 100
+                              ? const Color(0xFF2E7D32)
+                              : theme.colorScheme.primary,
+                        ),
+                      ),
+                    );
+                  },
                 ),
               ],
             ),
