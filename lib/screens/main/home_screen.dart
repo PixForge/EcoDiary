@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:intl/intl.dart';
 import '../../providers/habit_provider.dart';
 import '../../providers/stats_provider.dart';
 import '../../widgets/habit_tile.dart';
@@ -69,23 +68,69 @@ class HomeScreen extends StatelessWidget {
         children: [
           // Прогресс выполнения за день
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            padding: const EdgeInsets.all(24),
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  theme.colorScheme.primaryContainer.withOpacity(0.5),
+                  theme.colorScheme.primaryContainer.withOpacity(0.1),
+                ],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+              ),
+            ),
             child: Column(
               children: [
-                LinearProgressIndicator(
-                  value: completionPercent / 100,
-                  backgroundColor: Colors.grey[200],
-                  valueColor: AlwaysStoppedAnimation<Color>(
-                    completionPercent == 100
-                        ? Colors.green
-                        : theme.colorScheme.primary,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  '${completionPercent.toStringAsFixed(0)}% выполнено сегодня',
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: Colors.grey[600],
+                // Круговой прогресс-индикатор
+                SizedBox(
+                  width: 140,
+                  height: 140,
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      TweenAnimationBuilder<double>(
+                        tween: Tween(begin: 0, end: completionPercent / 100),
+                        duration: const Duration(milliseconds: 800),
+                        curve: Curves.easeOutCubic,
+                        builder: (context, value, _) {
+                          return SizedBox(
+                            width: 140,
+                            height: 140,
+                            child: CircularProgressIndicator(
+                              value: value,
+                              strokeWidth: 12,
+                              backgroundColor: Colors.grey[200],
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                completionPercent == 100
+                                    ? const Color(0xFF2E7D32)
+                                    : theme.colorScheme.primary,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                      Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            '${completionPercent.toStringAsFixed(0)}%',
+                            style: theme.textTheme.headlineMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: completionPercent == 100
+                                  ? const Color(0xFF2E7D32)
+                                  : theme.colorScheme.primary,
+                            ),
+                          ),
+                          Text(
+                            completionPercent == 100 ? '✓ Всё!' : 'выполнено',
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: Colors.grey[600],
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                 ),
               ],
