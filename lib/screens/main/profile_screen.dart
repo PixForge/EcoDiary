@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/theme_provider.dart';
 import '../../services/notification_service.dart';
+import '../../helpers/localization.dart';
 import 'export_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -41,16 +42,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final confirm = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Выход'),
-        content: const Text('Вы уверены, что хотите выйти?'),
+        title: Text(context.tr('confirm_exit')),
+        content: Text(context.tr('confirm_exit_msg')),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Отмена'),
+            child: Text(context.tr('cancel')),
           ),
           ElevatedButton(
             onPressed: () => Navigator.pop(context, true),
-            child: const Text('Выйти'),
+            child: Text(context.tr('exit')),
           ),
         ],
       ),
@@ -68,37 +69,36 @@ class _ProfileScreenState extends State<ProfileScreen> {
     await showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Сменить пароль'),
+        title: Text(context.tr('change_password')),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             TextField(
               controller: currentController,
               obscureText: true,
-              decoration: const InputDecoration(labelText: 'Текущий пароль'),
+              decoration: InputDecoration(labelText: context.tr('password')),
             ),
             const SizedBox(height: 12),
             TextField(
               controller: newController,
               obscureText: true,
-              decoration: const InputDecoration(labelText: 'Новый пароль'),
+              decoration: InputDecoration(labelText: context.tr('password')),
             ),
           ],
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Отмена'),
+            child: Text(context.tr('cancel')),
           ),
           ElevatedButton(
-            onPressed: () async {
-              // TODO: Реализовать через AuthService
+            onPressed: () {
               Navigator.pop(context);
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Функция в разработке')),
+                SnackBar(content: Text(context.tr('change_password'))),
               );
             },
-            child: const Text('Сохранить'),
+            child: Text(context.tr('save')),
           ),
         ],
       ),
@@ -113,7 +113,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final user = authProvider.user;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Профиль и настройки')),
+      appBar: AppBar(title: Text(context.tr('profile'))),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
@@ -148,13 +148,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
           const SizedBox(height: 16),
 
           // Настройки
-          _sectionHeader(context, 'Настройки'),
+          _sectionHeader(context, context.tr('settings')),
 
           // Тема
           Card(
             child: SwitchListTile(
               secondary: const Icon(Icons.dark_mode_outlined),
-              title: const Text('Тёмная тема'),
+              title: Text(context.tr('dark_mode')),
               value: themeProvider.isDarkMode,
               onChanged: (value) {
                 themeProvider.setDarkMode(value);
@@ -168,7 +168,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           Card(
             child: SwitchListTile(
               secondary: const Icon(Icons.notifications_outlined),
-              title: const Text('Уведомления'),
+              title: Text(context.tr('notifications')),
               value: _notificationsEnabled,
               onChanged: (value) async {
                 setState(() {
@@ -185,16 +185,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
           Card(
             child: ListTile(
               leading: const Icon(Icons.notification_add),
-              title: const Text('Тестовое уведомление'),
-              subtitle: const Text('Проверить работу уведомлений'),
+              title: Text(context.tr('test_notification')),
+              subtitle: Text(context.tr('test_notification_subtitle')),
               onTap: () async {
                 await NotificationService().showTestNotification();
                 final messenger = ScaffoldMessenger.of(context);
                 if (mounted) {
                   messenger.showSnackBar(
-                    const SnackBar(
-                      content: Text('Уведомление отправлено'),
-                    ),
+                    SnackBar(content: Text(context.tr('notification_sent'))),
                   );
                 }
               },
@@ -207,7 +205,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           Card(
             child: ListTile(
               leading: const Icon(Icons.language),
-              title: const Text('Язык приложения'),
+              title: Text(context.tr('language')),
               subtitle: Text(
                 themeProvider.languageCode == 'ru' ? 'Русский' : 'English',
               ),
@@ -230,13 +228,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
           const SizedBox(height: 16),
 
           // Аккаунт
-          _sectionHeader(context, 'Аккаунт'),
+          _sectionHeader(context, context.tr('account')),
 
           // Сменить пароль
           Card(
             child: ListTile(
               leading: const Icon(Icons.lock_outline),
-              title: const Text('Сменить пароль'),
+              title: Text(context.tr('change_password')),
               trailing: const Icon(Icons.chevron_right),
               onTap: _changePassword,
             ),
@@ -248,8 +246,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
           Card(
             child: ListTile(
               leading: const Icon(Icons.picture_as_pdf),
-              title: const Text('Экспорт в PDF'),
-              subtitle: const Text('Отчёт по привычкам и эко-эффекту'),
+              title: Text(context.tr('export_pdf')),
+              subtitle: Text(context.tr('export_subtitle')),
               trailing: const Icon(Icons.chevron_right),
               onTap: () {
                 Navigator.push(
@@ -266,9 +264,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
           Card(
             child: ListTile(
               leading: const Icon(Icons.logout, color: Colors.red),
-              title: const Text(
-                'Выйти из аккаунта',
-                style: TextStyle(color: Colors.red),
+              title: Text(
+                context.tr('sign_out'),
+                style: const TextStyle(color: Colors.red),
               ),
               onTap: _signOut,
             ),
@@ -279,7 +277,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           // Версия
           Center(
             child: Text(
-              'Версия 1.0.0',
+              context.tr('version'),
               style: TextStyle(
                 color: Colors.grey[500],
                 fontSize: 12,

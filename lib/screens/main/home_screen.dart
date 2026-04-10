@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../../providers/habit_provider.dart';
 import '../../providers/stats_provider.dart';
 import '../../widgets/habit_tile.dart';
+import '../../helpers/localization.dart';
 import 'profile_screen.dart';
 import 'eco_impact_screen.dart';
 import 'achievements_screen.dart';
@@ -23,7 +24,7 @@ class HomeScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Мои привычки'),
+        title: Text(context.tr('home')),
         actions: [
           // Эко-эффект
           IconButton(
@@ -85,7 +86,9 @@ class HomeScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      completionPercent == 100 ? '✓ Всё выполнено!' : 'Прогресс на сегодня',
+                      completionPercent == 100
+                          ? context.tr('all_done')
+                          : context.tr('progress_today'),
                       style: theme.textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.bold,
                         color: completionPercent == 100

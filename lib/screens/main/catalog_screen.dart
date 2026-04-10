@@ -4,6 +4,7 @@ import '../../providers/habit_provider.dart';
 import '../../data/habit_catalog.dart';
 import '../../models/habit_category.dart';
 import '../../models/habit.dart';
+import '../../helpers/localization.dart';
 import 'habit_detail_screen.dart';
 import 'create_custom_habit_screen.dart';
 
@@ -42,7 +43,7 @@ class _CatalogScreenState extends State<CatalogScreen>
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Каталог привычек'),
+        title: Text(context.tr('catalog')),
         bottom: TabBar(
           controller: _tabController,
           isScrollable: true,
@@ -64,7 +65,7 @@ class _CatalogScreenState extends State<CatalogScreen>
           );
         },
         icon: const Icon(Icons.add),
-        label: const Text('Создать привычку'),
+        label: Text(context.tr('create_habit')),
       ),
       body: Column(
         children: [
@@ -74,7 +75,7 @@ class _CatalogScreenState extends State<CatalogScreen>
             child: TextField(
               controller: _searchController,
               decoration: InputDecoration(
-                hintText: 'Поиск привычек...',
+                hintText: context.tr('search_habits'),
                 prefixIcon: const Icon(Icons.search),
                 suffixIcon: _searchQuery.isNotEmpty
                     ? IconButton(
@@ -123,14 +124,14 @@ class _CatalogScreenState extends State<CatalogScreen>
                   children: [
                     // Выбранные привычки
                     if (selectedHabits.isNotEmpty) ...[
-                      _buildSectionHeader(context, '✓ Выбранные', selectedHabits.length),
+                      _buildSectionHeader(context, context.tr('selected'), selectedHabits.length),
                       ...selectedHabits.map((habit) => _buildHabitCard(habit, true)),
                       const SizedBox(height: 16),
                     ],
 
                     // Доступные привычки
                     if (availableHabits.isNotEmpty) ...[
-                      _buildSectionHeader(context, 'Добавить', availableHabits.length),
+                      _buildSectionHeader(context, context.tr('add'), availableHabits.length),
                       ...availableHabits.map((habit) => _buildHabitCard(habit, false)),
                     ],
 
@@ -140,7 +141,7 @@ class _CatalogScreenState extends State<CatalogScreen>
                         child: Padding(
                           padding: const EdgeInsets.all(32),
                           child: Text(
-                            'Ничего не найдено',
+                            context.tr('nothing_found'),
                             style: TextStyle(color: Colors.grey[600]),
                           ),
                         ),

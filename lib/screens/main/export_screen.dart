@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import '../../providers/habit_provider.dart';
 import '../../services/export_service.dart';
+import '../../helpers/localization.dart';
 
 class ExportScreen extends StatefulWidget {
   const ExportScreen({super.key});
@@ -48,7 +49,7 @@ class _ExportScreenState extends State<ExportScreen> {
   Future<void> _export() async {
     if (_selectedRange == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Выберите период')),
+        SnackBar(content: Text(context.tr('select_period'))),
       );
       return;
     }
@@ -90,7 +91,7 @@ class _ExportScreenState extends State<ExportScreen> {
     final theme = Theme.of(context);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Экспорт отчёта')),
+      appBar: AppBar(title: Text(context.tr('export'))),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
@@ -102,7 +103,7 @@ class _ExportScreenState extends State<ExportScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Выберите период',
+                    context.tr('select_period'),
                     style: theme.textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
@@ -113,9 +114,9 @@ class _ExportScreenState extends State<ExportScreen> {
                   Wrap(
                     spacing: 8,
                     children: [
-                      _presetChip('Неделя', _presetRanges[0]),
-                      _presetChip('Месяц', _presetRanges[1]),
-                      _presetChip('3 месяца', _presetRanges[2]),
+                      _presetChip(context.tr('week'), _presetRanges[0]),
+                      _presetChip(context.tr('month'), _presetRanges[1]),
+                      _presetChip('3 ${context.tr('month').toLowerCase()}', _presetRanges[2]),
                     ],
                   ),
 
@@ -128,7 +129,7 @@ class _ExportScreenState extends State<ExportScreen> {
                     label: Text(
                       _selectedRange != null
                           ? '${DateFormat('dd.MM.yyyy').format(_selectedRange!.start)} — ${DateFormat('dd.MM.yyyy').format(_selectedRange!.end)}'
-                          : 'Выбрать даты',
+                          : context.tr('select_date_range'),
                     ),
                   ),
                 ],
@@ -146,7 +147,7 @@ class _ExportScreenState extends State<ExportScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Содержимое отчёта',
+                    context.tr('report_content'),
                     style: theme.textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
@@ -180,7 +181,7 @@ class _ExportScreenState extends State<ExportScreen> {
                     )
                   : const Icon(Icons.picture_as_pdf),
               label: Text(
-                _isExporting ? 'Экспорт...' : 'Экспортировать в PDF',
+                _isExporting ? context.tr('exporting') : context.tr('export_to_pdf'),
               ),
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 16),
