@@ -159,7 +159,7 @@ class HabitProvider extends ChangeNotifier {
 
     // Генерируем уникальный ID для пользовательской привычки
     final timestamp = DateTime.now().millisecondsSinceEpoch;
-    final customId = 'custom_${user.uid}_$timestamp';
+    final customId = 'custom_${user!.uid}_$timestamp';
 
     final newHabit = Habit(
       id: customId,
