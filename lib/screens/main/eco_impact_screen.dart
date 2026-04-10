@@ -10,7 +10,6 @@ class EcoImpactScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final habits = context.watch<HabitProvider>().habits;
     final impactCalc = ImpactCalcService();
 

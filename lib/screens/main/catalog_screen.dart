@@ -38,7 +38,6 @@ class _CatalogScreenState extends State<CatalogScreen>
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     final habitProvider = context.watch<HabitProvider>();
 
     return Scaffold(
@@ -268,7 +267,7 @@ class _CatalogScreenState extends State<CatalogScreen>
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
       decoration: BoxDecoration(
-        color: Colors.green.withOpacity(0.1),
+        color: Colors.green.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(4),
       ),
       child: Text(

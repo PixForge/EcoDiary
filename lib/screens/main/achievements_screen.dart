@@ -135,7 +135,7 @@ class _AchievementsScreenState extends State<AchievementsScreen> {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 12, vertical: 4),
                       decoration: BoxDecoration(
-                        color: _tierColor(tier).withOpacity(0.2),
+                        color: _tierColor(tier).withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(16),
                       ),
                       child: Text(
