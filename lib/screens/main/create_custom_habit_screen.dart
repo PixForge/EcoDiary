@@ -4,6 +4,7 @@ import 'package:uuid/uuid.dart';
 import '../../models/habit.dart';
 import '../../models/habit_category.dart';
 import '../../providers/habit_provider.dart';
+import '../../helpers/localization.dart';
 
 class CreateCustomHabitScreen extends StatefulWidget {
   const CreateCustomHabitScreen({super.key});
@@ -65,8 +66,8 @@ class _CreateCustomHabitScreenState extends State<CreateCustomHabitScreen> {
       if (success) {
         Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Привычка создана! ✓'),
+          SnackBar(
+            content: Text(context.tr('habit_created')),
             backgroundColor: Colors.green,
           ),
         );
@@ -74,7 +75,7 @@ class _CreateCustomHabitScreenState extends State<CreateCustomHabitScreen> {
         final error = context.read<HabitProvider>().errorMessage;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(error ?? 'Не удалось создать привычку'),
+            content: Text(error ?? context.tr('create_habit_failed')),
             backgroundColor: Colors.red,
           ),
         );
@@ -83,7 +84,7 @@ class _CreateCustomHabitScreenState extends State<CreateCustomHabitScreen> {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Ошибка: $e'),
+          content: Text('${context.tr('error_prefix')}: $e'),
           backgroundColor: Colors.red,
         ),
       );
@@ -96,7 +97,7 @@ class _CreateCustomHabitScreenState extends State<CreateCustomHabitScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Создать привычку'),
+        title: Text(context.tr('create_habit')),
       ),
       body: Form(
         key: _formKey,
@@ -111,7 +112,7 @@ class _CreateCustomHabitScreenState extends State<CreateCustomHabitScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Название привычки',
+                      context.tr('habit_name'),
                       style: theme.textTheme.titleSmall?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
@@ -119,13 +120,13 @@ class _CreateCustomHabitScreenState extends State<CreateCustomHabitScreen> {
                     const SizedBox(height: 8),
                     TextFormField(
                       controller: _titleController,
-                      decoration: const InputDecoration(
-                        hintText: 'Например: Пить воду утром',
+                      decoration: InputDecoration(
+                        hintText: context.tr('habit_name_hint'),
                         border: OutlineInputBorder(),
                       ),
                       validator: (value) {
                         if (value == null || value.trim().isEmpty) {
-                          return 'Введите название привычки';
+                          return context.tr('enter_habit_name');
                         }
                         return null;
                       },
@@ -145,7 +146,7 @@ class _CreateCustomHabitScreenState extends State<CreateCustomHabitScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Описание',
+                      context.tr('description'),
                       style: theme.textTheme.titleSmall?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
@@ -153,8 +154,8 @@ class _CreateCustomHabitScreenState extends State<CreateCustomHabitScreen> {
                     const SizedBox(height: 8),
                     TextFormField(
                       controller: _descriptionController,
-                      decoration: const InputDecoration(
-                        hintText: 'Опишите вашу привычку',
+                      decoration: InputDecoration(
+                        hintText: context.tr('description_hint'),
                         border: OutlineInputBorder(),
                       ),
                       maxLines: 3,
@@ -174,7 +175,7 @@ class _CreateCustomHabitScreenState extends State<CreateCustomHabitScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Категория',
+                      context.tr('category'),
                       style: theme.textTheme.titleSmall?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
@@ -191,7 +192,11 @@ class _CreateCustomHabitScreenState extends State<CreateCustomHabitScreen> {
                             children: [
                               Text(category.icon),
                               const SizedBox(width: 4),
-                              Text(category.displayName),
+                              Text(
+                                category.localizedDisplayName(
+                                  Localizations.localeOf(context).languageCode,
+                                ),
+                              ),
                             ],
                           ),
                           selected: isSelected,
@@ -218,26 +223,26 @@ class _CreateCustomHabitScreenState extends State<CreateCustomHabitScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Экологический эффект (опционально)',
+                      context.tr('eco_effect_optional'),
                       style: theme.textTheme.titleSmall?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     const SizedBox(height: 12),
                     _buildImpactField(
-                      '💧 Вода (литров)',
+                      context.tr('water_liters'),
                       _waterController,
                       '0',
                     ),
                     const SizedBox(height: 8),
                     _buildImpactField(
-                      '⚡ Энергия (кВт·ч)',
+                      context.tr('energy_kwh'),
                       _energyController,
                       '0',
                     ),
                     const SizedBox(height: 8),
                     _buildImpactField(
-                      '🌬️ CO₂ (кг)',
+                      context.tr('co2_kg'),
                       _co2Controller,
                       '0',
                     ),
@@ -256,7 +261,7 @@ class _CreateCustomHabitScreenState extends State<CreateCustomHabitScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Периодичность',
+                      context.tr('frequency'),
                       style: theme.textTheme.titleSmall?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
@@ -265,13 +270,13 @@ class _CreateCustomHabitScreenState extends State<CreateCustomHabitScreen> {
                     Wrap(
                       spacing: 8,
                       children: [
-                        _dayChip('Пн', 1),
-                        _dayChip('Вт', 2),
-                        _dayChip('Ср', 3),
-                        _dayChip('Чт', 4),
-                        _dayChip('Пт', 5),
-                        _dayChip('Сб', 6),
-                        _dayChip('Вс', 7),
+                        _dayChip(context.tr('day_mon'), 1),
+                        _dayChip(context.tr('day_tue'), 2),
+                        _dayChip(context.tr('day_wed'), 3),
+                        _dayChip(context.tr('day_thu'), 4),
+                        _dayChip(context.tr('day_fri'), 5),
+                        _dayChip(context.tr('day_sat'), 6),
+                        _dayChip(context.tr('day_sun'), 7),
                       ],
                     ),
                   ],
@@ -292,7 +297,7 @@ class _CreateCustomHabitScreenState extends State<CreateCustomHabitScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'Напоминание',
+                          context.tr('reminder'),
                           style: theme.textTheme.titleSmall?.copyWith(
                             fontWeight: FontWeight.bold,
                           ),
@@ -310,11 +315,11 @@ class _CreateCustomHabitScreenState extends State<CreateCustomHabitScreen> {
                     if (_reminderEnabled)
                       ListTile(
                         leading: const Icon(Icons.access_time),
-                        title: const Text('Время напоминания'),
+                        title: Text(context.tr('reminder_time')),
                         subtitle: Text(
                           _reminderTime != null
                               ? '${_reminderTime!.hour.toString().padLeft(2, '0')}:${_reminderTime!.minute.toString().padLeft(2, '0')}'
-                              : 'Не выбрано',
+                              : context.tr('not_selected'),
                         ),
                         onTap: () async {
                           final time = await showTimePicker(
@@ -342,8 +347,8 @@ class _CreateCustomHabitScreenState extends State<CreateCustomHabitScreen> {
               style: ElevatedButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 16),
               ),
-              child: const Text(
-                'Создать привычку',
+              child: Text(
+                context.tr('create_habit'),
                 style: TextStyle(fontSize: 16),
               ),
             ),

@@ -42,4 +42,22 @@ extension HabitCategoryExtension on HabitCategory {
         return '🌿';
     }
   }
+
+  String localizedDisplayName(String languageCode) {
+    final isEn = languageCode == 'en';
+    switch (this) {
+      case HabitCategory.waterSaving:
+        return isEn ? 'Water saving' : 'Экономия воды';
+      case HabitCategory.energySaving:
+        return isEn ? 'Energy saving' : 'Экономия энергии';
+      case HabitCategory.wasteManagement:
+        return isEn ? 'Waste management' : 'Обращение с отходами';
+      case HabitCategory.ecoTransport:
+        return isEn ? 'Eco transport' : 'Экологичный транспорт';
+      case HabitCategory.ecoConsumption:
+        return isEn ? 'Eco consumption' : 'Экологичное потребление';
+      case HabitCategory.natureCare:
+        return isEn ? 'Nature care' : 'Забота о природе';
+    }
+  }
 }

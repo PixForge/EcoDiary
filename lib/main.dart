@@ -58,7 +58,7 @@ class EcoHabitDiaryApp extends StatelessWidget {
       child: Consumer<ThemeProvider>(
         builder: (context, themeProvider, child) {
           return MaterialApp(
-            title: 'ЭКО: дневник экологических привычек',
+            title: 'ECO: Eco Habit Diary',
             debugShowCheckedModeBanner: false,
             theme: themeProvider.lightTheme,
             darkTheme: themeProvider.darkTheme,

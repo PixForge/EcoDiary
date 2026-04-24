@@ -106,10 +106,15 @@ class _CatalogScreenState extends State<CatalogScreen>
 
                 // Фильтрация по поиску
                 if (_searchQuery.isNotEmpty) {
+                  final lang = Localizations.localeOf(context).languageCode;
                   habits = habits
                       .where((h) =>
-                          h.title.toLowerCase().contains(_searchQuery) ||
-                          h.description.toLowerCase().contains(_searchQuery))
+                          HabitCatalog.localizedTitle(h, lang)
+                              .toLowerCase()
+                              .contains(_searchQuery) ||
+                          HabitCatalog.localizedDescription(h, lang)
+                              .toLowerCase()
+                              .contains(_searchQuery))
                       .toList();
                 }
 
@@ -189,6 +194,7 @@ class _CatalogScreenState extends State<CatalogScreen>
 
   Widget _buildHabitCard(Habit habit, bool isSelected) {
     final theme = Theme.of(context);
+    final lang = Localizations.localeOf(context).languageCode;
 
     return Card(
       margin: const EdgeInsets.only(bottom: 8),
@@ -219,14 +225,14 @@ class _CatalogScreenState extends State<CatalogScreen>
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          habit.title,
+                          HabitCatalog.localizedTitle(habit, lang),
                           style: theme.textTheme.titleSmall?.copyWith(
                             fontWeight: FontWeight.w600,
                           ),
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          habit.description,
+                          HabitCatalog.localizedDescription(habit, lang),
                           style: theme.textTheme.bodySmall?.copyWith(
                             color: Colors.grey[600],
                           ),
@@ -284,17 +290,17 @@ class _CatalogScreenState extends State<CatalogScreen>
   String _shortCategoryName(HabitCategory category) {
     switch (category) {
       case HabitCategory.waterSaving:
-        return 'Вода';
+        return context.tr('cat_water');
       case HabitCategory.energySaving:
-        return 'Энергия';
+        return context.tr('cat_energy');
       case HabitCategory.wasteManagement:
-        return 'Отходы';
+        return context.tr('cat_waste');
       case HabitCategory.ecoTransport:
-        return 'Транспорт';
+        return context.tr('cat_transport');
       case HabitCategory.ecoConsumption:
-        return 'Потребление';
+        return context.tr('cat_consumption');
       case HabitCategory.natureCare:
-        return 'Природа';
+        return context.tr('cat_nature');
     }
   }
 }

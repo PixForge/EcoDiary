@@ -5,6 +5,8 @@ import 'package:printing/printing.dart';
 import '../models/habit.dart';
 import '../models/habit_category.dart';
 import 'impact_calc_service.dart';
+import '../helpers/localization.dart';
+import '../data/habit_catalog.dart';
 
 /// Сервис экспорта данных в PDF
 class ExportService {
@@ -32,7 +34,11 @@ class ExportService {
     required DateTime startDate,
     required DateTime endDate,
     required int longestStreak,
+    required String languageCode,
   }) async {
+    String t(String key) =>
+        AppLocalizations(Locale(languageCode)).translate(key);
+
     await _loadFonts();
     final pdf = pw.Document();
     final impact = _impactCalc.calculateTotalImpact(habits, startDate, endDate);
@@ -61,7 +67,7 @@ class ExportService {
               crossAxisAlignment: pw.CrossAxisAlignment.start,
               children: [
                 pw.Text(
-                  'Дневник экологических привычек',
+                  t('pdf_app_title'),
                   style: pw.TextStyle(
                     fontSize: 28,
                     fontWeight: pw.FontWeight.bold,
@@ -71,7 +77,7 @@ class ExportService {
                 ),
                 pw.SizedBox(height: 4),
                 pw.Text(
-                  'Отчёт: ${_formatDate(startDate)} — ${_formatDate(endDate)}',
+                  '${t('pdf_report_period')}: ${_formatDate(startDate, languageCode)} - ${_formatDate(endDate, languageCode)}',
                   style: pw.TextStyle(
                     fontSize: 14,
                     font: f,
@@ -85,16 +91,16 @@ class ExportService {
           pw.Divider(),
 
           // Общая статистика
-          pw.Header(level: 1, text: 'Общая статистика'),
+          pw.Header(level: 1, text: t('pdf_overall_stats')),
           pw.Padding(
             padding: const pw.EdgeInsets.only(bottom: 10),
             child: pw.Row(
               mainAxisAlignment: pw.MainAxisAlignment.spaceAround,
               children: [
-                _statCard(f, fBold, 'Привычек', '$scheduledHabits'),
-                _statCard(f, fBold, 'Выполнено', '$totalCompletions'),
-                _statCard(f, fBold, 'Процент', '${completionRate.toStringAsFixed(1)}%'),
-                _statCard(f, fBold, 'Серия', '$longestStreak дн.'),
+                _statCard(f, fBold, t('pdf_habits_count'), '$scheduledHabits'),
+                _statCard(f, fBold, t('pdf_done_count'), '$totalCompletions'),
+                _statCard(f, fBold, t('pdf_percent'), '${completionRate.toStringAsFixed(1)}%'),
+                _statCard(f, fBold, t('pdf_streak'), '$longestStreak ${t('streak_days')}'),
               ],
             ),
           ),
@@ -102,24 +108,24 @@ class ExportService {
           pw.SizedBox(height: 20),
 
           // Экологический эффект
-          pw.Header(level: 1, text: 'Экологический эффект'),
+          pw.Header(level: 1, text: t('pdf_eco_impact')),
           pw.Padding(
             padding: const pw.EdgeInsets.only(bottom: 10),
             child: pw.Column(
               crossAxisAlignment: pw.CrossAxisAlignment.start,
               children: [
                 pw.Text(
-                  '💧 Воды сохранено: ${impact.waterSavedLiters.toStringAsFixed(1)} литров',
+                  '${t('pdf_water_saved')}: ${impact.waterSavedLiters.toStringAsFixed(1)} l',
                   style: pw.TextStyle(fontSize: 14, font: f),
                 ),
                 pw.SizedBox(height: 5),
                 pw.Text(
-                  '⚡ Энергии сэкономлено: ${impact.energySavedKwh.toStringAsFixed(1)} кВт·ч',
+                  '${t('pdf_energy_saved')}: ${impact.energySavedKwh.toStringAsFixed(1)} kWh',
                   style: pw.TextStyle(fontSize: 14, font: f),
                 ),
                 pw.SizedBox(height: 5),
                 pw.Text(
-                  '🌬️ CO₂ предотвращено: ${impact.co2SavedKg.toStringAsFixed(1)} кг',
+                  '${t('pdf_co2_prevented')}: ${impact.co2SavedKg.toStringAsFixed(1)} kg',
                   style: pw.TextStyle(fontSize: 14, font: f),
                 ),
               ],
@@ -129,29 +135,29 @@ class ExportService {
           pw.SizedBox(height: 20),
 
           // Визуальные эквиваленты
-          pw.Header(level: 1, text: 'Визуальные эквиваленты'),
+          pw.Header(level: 1, text: t('pdf_visual_equivalents')),
           pw.Padding(
             padding: const pw.EdgeInsets.only(bottom: 10),
             child: pw.Column(
               crossAxisAlignment: pw.CrossAxisAlignment.start,
               children: [
                 pw.Text(
-                  '🌳 Деревьев (поглощение CO₂): ${_impactCalc.co2ToTrees(impact.co2SavedKg).toStringAsFixed(1)}',
+                  '${t('pdf_trees')}: ${_impactCalc.co2ToTrees(impact.co2SavedKg).toStringAsFixed(1)}',
                   style: pw.TextStyle(fontSize: 14, font: f),
                 ),
                 pw.SizedBox(height: 5),
                 pw.Text(
-                  '🚗 Км на авто (эквивалент CO₂): ${_impactCalc.co2ToCarKm(impact.co2SavedKg).toStringAsFixed(0)} км',
+                  '${t('pdf_car_km')}: ${_impactCalc.co2ToCarKm(impact.co2SavedKg).toStringAsFixed(0)} km',
                   style: pw.TextStyle(fontSize: 14, font: f),
                 ),
                 pw.SizedBox(height: 5),
                 pw.Text(
-                  '💡 Часов работы LED-лампы: ${_impactCalc.energyToLedHours(impact.energySavedKwh).toStringAsFixed(0)} ч',
+                  '${t('pdf_led_hours')}: ${_impactCalc.energyToLedHours(impact.energySavedKwh).toStringAsFixed(0)} h',
                   style: pw.TextStyle(fontSize: 14, font: f),
                 ),
                 pw.SizedBox(height: 5),
                 pw.Text(
-                  '🛒 Ванн (эквивалент воды): ${_impactCalc.waterToBaths(impact.waterSavedLiters).toStringAsFixed(1)}',
+                  '${t('pdf_baths')}: ${_impactCalc.waterToBaths(impact.waterSavedLiters).toStringAsFixed(1)}',
                   style: pw.TextStyle(fontSize: 14, font: f),
                 ),
               ],
@@ -161,7 +167,7 @@ class ExportService {
           pw.SizedBox(height: 20),
 
           // Детализация по привычкам
-          pw.Header(level: 1, text: 'Детализация по привычкам'),
+          pw.Header(level: 1, text: t('pdf_habit_details')),
           pw.Table(
             border: pw.TableBorder.all(color: PdfColors.grey300),
             columnWidths: {
@@ -173,9 +179,9 @@ class ExportService {
               pw.TableRow(
                 decoration: const pw.BoxDecoration(color: PdfColors.green50),
                 children: [
-                  _headerCell('Привычка'),
-                  _headerCell('Категория'),
-                  _headerCell('Выполнений'),
+                  _headerCell(t('pdf_habit')),
+                  _headerCell(t('pdf_category')),
+                  _headerCell(t('pdf_completions')),
                 ],
               ),
               for (final habit in habits)
@@ -184,7 +190,7 @@ class ExportService {
                     pw.Padding(
                       padding: const pw.EdgeInsets.all(4),
                       child: pw.Text(
-                        habit.title,
+                        HabitCatalog.localizedTitle(habit, languageCode),
                         style: pw.TextStyle(fontSize: 11, font: f),
                       ),
                     ),
@@ -212,7 +218,7 @@ class ExportService {
         footer: (context) => pw.Padding(
           padding: const pw.EdgeInsets.only(top: 20),
           child: pw.Text(
-            'Создано в приложении «Дневник экологических привычек»',
+            t('pdf_footer'),
             textAlign: pw.TextAlign.center,
             style: pw.TextStyle(
               fontSize: 10,
@@ -226,7 +232,7 @@ class ExportService {
 
     await Printing.layoutPdf(
       onLayout: (format) async => pdf.save(),
-      name: 'eco_habit_report_${_formatDateFile(startDate)}_${_formatDateFile(endDate)}.pdf',
+      name: '${t('pdf_report_file_prefix')}_${_formatDateFile(startDate)}_${_formatDateFile(endDate)}.pdf',
     );
   }
 
@@ -278,10 +284,37 @@ class ExportService {
     );
   }
 
-  String _formatDate(DateTime date) {
-    final months = [
-      'января', 'февраля', 'марта', 'апреля', 'мая', 'июня',
-      'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'
+  String _formatDate(DateTime date, String languageCode) {
+    if (languageCode == 'en') {
+      const months = [
+        'January',
+        'February',
+        'March',
+        'April',
+        'May',
+        'June',
+        'July',
+        'August',
+        'September',
+        'October',
+        'November',
+        'December',
+      ];
+      return '${months[date.month - 1]} ${date.day}, ${date.year}';
+    }
+    const months = [
+      'января',
+      'февраля',
+      'марта',
+      'апреля',
+      'мая',
+      'июня',
+      'июля',
+      'августа',
+      'сентября',
+      'октября',
+      'ноября',
+      'декабря'
     ];
     return '${date.day} ${months[date.month - 1]} ${date.year}';
   }

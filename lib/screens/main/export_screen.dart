@@ -67,12 +67,13 @@ class _ExportScreenState extends State<ExportScreen> {
         startDate: _selectedRange!.start,
         endDate: _selectedRange!.end,
         longestStreak: habitProvider.getLongestStreak(),
+        languageCode: Localizations.localeOf(context).languageCode,
       );
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Ошибка экспорта: $e'),
+            content: Text('${context.tr('error_prefix')}: $e'),
             backgroundColor: Colors.red,
           ),
         );
@@ -153,11 +154,11 @@ class _ExportScreenState extends State<ExportScreen> {
                     ),
                   ),
                   const SizedBox(height: 12),
-                  _infoItem('✅', 'Количество выполненных привычек'),
-                  _infoItem('📊', 'Процент выполнения'),
-                  _infoItem('🔥', 'Достигнутые серии'),
-                  _infoItem('🌍', 'Рассчитанный экологический эффект'),
-                  _infoItem('📋', 'Детализация по каждой привычке'),
+                  _infoItem('✅', context.tr('report_item_completed_count')),
+                  _infoItem('📊', context.tr('report_item_completion_rate')),
+                  _infoItem('🔥', context.tr('report_item_streaks')),
+                  _infoItem('🌍', context.tr('report_item_eco_effect')),
+                  _infoItem('📋', context.tr('report_item_habit_details')),
                 ],
               ),
             ),

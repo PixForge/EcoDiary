@@ -35,7 +35,7 @@ class HomeScreen extends StatelessWidget {
                 MaterialPageRoute(builder: (_) => const EcoImpactScreen()),
               );
             },
-            tooltip: 'Экологический эффект',
+            tooltip: context.tr('eco_impact_tooltip'),
             splashRadius: 24,
           ),
           // Достижения
@@ -47,7 +47,7 @@ class HomeScreen extends StatelessWidget {
                 MaterialPageRoute(builder: (_) => const AchievementsScreen()),
               );
             },
-            tooltip: 'Достижения',
+            tooltip: context.tr('achievements'),
             splashRadius: 24,
           ),
           // Профиль
@@ -59,7 +59,7 @@ class HomeScreen extends StatelessWidget {
                 MaterialPageRoute(builder: (_) => const ProfileScreen()),
               );
             },
-            tooltip: 'Профиль',
+            tooltip: context.tr('profile'),
             splashRadius: 24,
           ),
         ],
@@ -177,8 +177,8 @@ class HomeScreen extends StatelessWidget {
             const SizedBox(height: 16),
             Text(
               isToday
-                  ? 'У вас пока нет привычек на сегодня'
-                  : 'Нет привычек на этот день',
+                  ? context.tr('profile_empty_today')
+                  : context.tr('profile_empty_day'),
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 18,
@@ -188,8 +188,8 @@ class HomeScreen extends StatelessWidget {
             const SizedBox(height: 8),
             Text(
               isToday
-                  ? 'Добавьте привычки из каталога'
-                  : 'Выберите другой день',
+                  ? context.tr('add_from_catalog')
+                  : context.tr('pick_another_day'),
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 14,
@@ -205,7 +205,7 @@ class HomeScreen extends StatelessWidget {
                     navigationKey.currentState?.switchToTab(1);
                   },
                   icon: const Icon(Icons.add),
-                  label: const Text('Добавить привычки'),
+                  label: Text(context.tr('add_habits')),
                 ),
               ),
           ],

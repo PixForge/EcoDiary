@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 import '../../models/habit.dart';
 import '../../models/habit_category.dart';
 import '../../providers/habit_provider.dart';
+import '../../helpers/localization.dart';
+import '../../data/habit_catalog.dart';
 
 class HabitDetailScreen extends StatefulWidget {
   final Habit habit;
@@ -54,8 +56,8 @@ class _HabitDetailScreenState extends State<HabitDetailScreen> {
       if (success) {
         Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Привычка добавлена! ✓'),
+          SnackBar(
+            content: Text(context.tr('habit_added')),
             backgroundColor: Colors.green,
           ),
         );
@@ -63,7 +65,7 @@ class _HabitDetailScreenState extends State<HabitDetailScreen> {
         final error = context.read<HabitProvider>().errorMessage;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(error ?? 'Не удалось добавить привычку'),
+            content: Text(error ?? context.tr('add_habit_failed')),
             backgroundColor: Colors.red,
           ),
         );
@@ -72,7 +74,7 @@ class _HabitDetailScreenState extends State<HabitDetailScreen> {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Ошибка: $e'),
+          content: Text('${context.tr('error_prefix')}: $e'),
           backgroundColor: Colors.red,
         ),
       );
@@ -82,10 +84,11 @@ class _HabitDetailScreenState extends State<HabitDetailScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final lang = Localizations.localeOf(context).languageCode;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Добавить привычку'),
+        title: Text(context.tr('add_habit')),
       ),
       body: ListView(
         padding: const EdgeInsets.all(16),
@@ -109,14 +112,14 @@ class _HabitDetailScreenState extends State<HabitDetailScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              widget.habit.title,
+                              HabitCatalog.localizedTitle(widget.habit, lang),
                               style: theme.textTheme.headlineSmall?.copyWith(
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
                             const SizedBox(height: 4),
                             Text(
-                              widget.habit.category.displayName,
+                              widget.habit.category.localizedDisplayName(lang),
                               style: theme.textTheme.bodyMedium?.copyWith(
                                 color: Colors.grey[600],
                               ),
@@ -128,7 +131,7 @@ class _HabitDetailScreenState extends State<HabitDetailScreen> {
                   ),
                   const Divider(height: 24),
                   Text(
-                    widget.habit.description,
+                    HabitCatalog.localizedDescription(widget.habit, lang),
                     style: theme.textTheme.bodyLarge,
                   ),
                 ],
@@ -149,20 +152,20 @@ class _HabitDetailScreenState extends State<HabitDetailScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Экологический эффект за выполнение',
+                      context.tr('habit_effect_per_completion'),
                       style: theme.textTheme.titleSmall?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     const SizedBox(height: 12),
                     if (widget.habit.waterSavedLiters > 0)
-                      _impactRow('💧 Воды сохранено',
+                      _impactRow('${context.tr('water_saved_full')}',
                           '${widget.habit.waterSavedLiters.toStringAsFixed(0)} л'),
                     if (widget.habit.energySavedKwh > 0)
-                      _impactRow('⚡ Энергии сэкономлено',
+                      _impactRow('${context.tr('energy_saved_full')}',
                           '${widget.habit.energySavedKwh.toStringAsFixed(1)} кВт·ч'),
                     if (widget.habit.co2SavedKg > 0)
-                      _impactRow('🌬️ CO₂ предотвращено',
+                      _impactRow('${context.tr('co2_prevented_full')}',
                           '${widget.habit.co2SavedKg.toStringAsFixed(1)} кг'),
                   ],
                 ),
@@ -179,7 +182,7 @@ class _HabitDetailScreenState extends State<HabitDetailScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Периодичность',
+                    context.tr('frequency'),
                     style: theme.textTheme.titleSmall?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
@@ -188,13 +191,13 @@ class _HabitDetailScreenState extends State<HabitDetailScreen> {
                   Wrap(
                     spacing: 8,
                     children: [
-                      _dayChip('Пн', 1),
-                      _dayChip('Вт', 2),
-                      _dayChip('Ср', 3),
-                      _dayChip('Чт', 4),
-                      _dayChip('Пт', 5),
-                      _dayChip('Сб', 6),
-                      _dayChip('Вс', 7),
+                      _dayChip(context.tr('day_mon'), 1),
+                      _dayChip(context.tr('day_tue'), 2),
+                      _dayChip(context.tr('day_wed'), 3),
+                      _dayChip(context.tr('day_thu'), 4),
+                      _dayChip(context.tr('day_fri'), 5),
+                      _dayChip(context.tr('day_sat'), 6),
+                      _dayChip(context.tr('day_sun'), 7),
                     ],
                   ),
                 ],
@@ -215,7 +218,7 @@ class _HabitDetailScreenState extends State<HabitDetailScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Напоминание',
+                        context.tr('reminder'),
                         style: theme.textTheme.titleSmall?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
@@ -233,11 +236,11 @@ class _HabitDetailScreenState extends State<HabitDetailScreen> {
                   if (_reminderEnabled)
                     ListTile(
                       leading: const Icon(Icons.access_time),
-                      title: const Text('Время напоминания'),
+                      title: Text(context.tr('reminder_time')),
                       subtitle: Text(
                         _reminderTime != null
                             ? '${_reminderTime!.hour.toString().padLeft(2, '0')}:${_reminderTime!.minute.toString().padLeft(2, '0')}'
-                            : 'Не выбрано',
+                            : context.tr('not_selected'),
                       ),
                       onTap: () async {
                         final time = await showTimePicker(
@@ -264,8 +267,8 @@ class _HabitDetailScreenState extends State<HabitDetailScreen> {
             style: ElevatedButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 16),
             ),
-            child: const Text(
-              'Добавить привычку',
+            child: Text(
+              context.tr('add_habit'),
               style: TextStyle(fontSize: 16),
             ),
           ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../providers/auth_provider.dart';
+import '../../helpers/localization.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({super.key});
@@ -33,7 +34,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     } else if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(authProvider.errorMessage ?? 'Ошибка'),
+          content: Text(authProvider.errorMessage ?? context.tr('error_generic')),
           backgroundColor: Colors.red,
         ),
       );
@@ -65,7 +66,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               ),
               const SizedBox(height: 24),
               Text(
-                'Восстановление пароля',
+                context.tr('forgot_password_title'),
                 textAlign: TextAlign.center,
                 style: theme.textTheme.headlineSmall?.copyWith(
                   fontWeight: FontWeight.bold,
@@ -75,8 +76,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               const SizedBox(height: 8),
               Text(
                 _emailSent
-                    ? 'Письмо отправлено! Проверьте вашу почту.'
-                    : 'Введите email, и мы отправим ссылку для восстановления пароля',
+                    ? context.tr('email_sent_title')
+                    : context.tr('forgot_password_hint'),
                 textAlign: TextAlign.center,
                 style: theme.textTheme.bodyLarge?.copyWith(
                   color: Colors.grey[600],
@@ -95,12 +96,12 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                         borderRadius: BorderRadius.circular(16),
                         border: Border.all(color: Colors.green.withValues(alpha: 0.3)),
                       ),
-                      child: const Column(
+                      child: Column(
                         children: [
                           Icon(Icons.check_circle, size: 48, color: Colors.green),
                           SizedBox(height: 12),
                           Text(
-                            'Письмо успешно отправлено!',
+                            context.tr('email_sent_success'),
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontSize: 16,
@@ -110,7 +111,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                           ),
                           SizedBox(height: 8),
                           Text(
-                            'Проверьте почтовый ящик и следуйте инструкциям в письме',
+                            context.tr('email_sent_desc'),
                             textAlign: TextAlign.center,
                           ),
                         ],
@@ -122,7 +123,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                         Navigator.pop(context);
                       },
                       icon: const Icon(Icons.login),
-                      label: const Text('Вернуться ко входу'),
+                      label: Text(context.tr('back_to_login')),
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(vertical: 16),
                       ),
@@ -138,16 +139,16 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                       TextFormField(
                         controller: _emailController,
                         keyboardType: TextInputType.emailAddress,
-                        decoration: const InputDecoration(
-                          labelText: 'Email',
+                        decoration: InputDecoration(
+                          labelText: context.tr('email'),
                           prefixIcon: Icon(Icons.email_outlined),
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Введите email';
+                            return context.tr('enter_email');
                           }
                           if (!value.contains('@')) {
-                            return 'Некорректный email';
+                            return context.tr('invalid_email');
                           }
                           return null;
                         },
@@ -171,8 +172,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                     color: Colors.white,
                                   ),
                                 )
-                              : const Text(
-                                  'Отправить письмо',
+                              : Text(
+                                  context.tr('send_email'),
                                   style: TextStyle(fontSize: 16),
                                 ),
                         ),

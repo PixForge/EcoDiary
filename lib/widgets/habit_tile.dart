@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/habit.dart';
 import '../models/habit_category.dart';
+import '../data/habit_catalog.dart';
 
 class HabitTile extends StatelessWidget {
   final Habit habit;
@@ -18,6 +19,7 @@ class HabitTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isCompleted = habit.isCompletedOn(date);
+    final lang = Localizations.localeOf(context).languageCode;
 
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
@@ -69,7 +71,7 @@ class HabitTile extends StatelessWidget {
                         const SizedBox(width: 6),
                         Expanded(
                           child: Text(
-                            habit.title,
+                            HabitCatalog.localizedTitle(habit, lang),
                             style: theme.textTheme.bodyLarge?.copyWith(
                               fontWeight: FontWeight.w600,
                               decoration:

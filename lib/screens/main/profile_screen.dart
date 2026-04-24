@@ -76,13 +76,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
             TextField(
               controller: currentController,
               obscureText: true,
-              decoration: InputDecoration(labelText: context.tr('password')),
+              decoration: InputDecoration(labelText: context.tr('current_password')),
             ),
             const SizedBox(height: 12),
             TextField(
               controller: newController,
               obscureText: true,
-              decoration: InputDecoration(labelText: context.tr('password')),
+              decoration: InputDecoration(labelText: context.tr('new_password')),
             ),
           ],
         ),
@@ -95,7 +95,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             onPressed: () {
               Navigator.pop(context);
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(context.tr('change_password'))),
+                SnackBar(content: Text(context.tr('password_changed'))),
               );
             },
             child: Text(context.tr('save')),
@@ -207,14 +207,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
               leading: const Icon(Icons.language),
               title: Text(context.tr('language')),
               subtitle: Text(
-                themeProvider.languageCode == 'ru' ? 'Русский' : 'English',
+                themeProvider.languageCode == 'ru'
+                    ? context.tr('app_language_ru')
+                    : context.tr('app_language_en'),
               ),
               trailing: DropdownButton<String>(
                 value: themeProvider.languageCode,
                 underline: const SizedBox(),
-                items: const [
-                  DropdownMenuItem(value: 'ru', child: Text('Русский')),
-                  DropdownMenuItem(value: 'en', child: Text('English')),
+                items: [
+                  DropdownMenuItem(
+                    value: 'ru',
+                    child: Text(context.tr('app_language_ru')),
+                  ),
+                  DropdownMenuItem(
+                    value: 'en',
+                    child: Text(context.tr('app_language_en')),
+                  ),
                 ],
                 onChanged: (value) {
                   if (value != null) {

@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import '../../providers/habit_provider.dart';
 import '../../providers/stats_provider.dart';
 import '../../models/habit_category.dart';
+import '../../helpers/localization.dart';
 
 class StatsScreen extends StatelessWidget {
   const StatsScreen({super.key});
@@ -17,7 +18,7 @@ class StatsScreen extends StatelessWidget {
 
     if (allHabits.isEmpty) {
       return Scaffold(
-        appBar: AppBar(title: const Text('Статистика')),
+        appBar: AppBar(title: Text(context.tr('stats'))),
         body: Center(
           child: Padding(
             padding: const EdgeInsets.all(32),
@@ -27,7 +28,7 @@ class StatsScreen extends StatelessWidget {
                 Icon(Icons.bar_chart, size: 80, color: Colors.grey[400]),
                 const SizedBox(height: 16),
                 Text(
-                  'Добавьте привычки, чтобы увидеть статистику',
+                  context.tr('stats_empty'),
                   textAlign: TextAlign.center,
                   style: TextStyle(color: Colors.grey[600], fontSize: 16),
                 ),
@@ -47,31 +48,31 @@ class StatsScreen extends StatelessWidget {
     final categoryStats = context.watch<StatsProvider>().getCategoryStats(allHabits);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Статистика')),
+      appBar: AppBar(title: Text(context.tr('stats'))),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
           // Карточки метрик
           Row(
             children: [
-              _metricCard(context, '📊', 'Неделя', '${weekPercent.toStringAsFixed(0)}%', Colors.blue),
+              _metricCard(context, '📊', context.tr('week'), '${weekPercent.toStringAsFixed(0)}%', Colors.blue),
               const SizedBox(width: 12),
-              _metricCard(context, '📅', 'Месяц', '${monthPercent.toStringAsFixed(0)}%', Colors.orange),
+              _metricCard(context, '📅', context.tr('month'), '${monthPercent.toStringAsFixed(0)}%', Colors.orange),
             ],
           ),
           const SizedBox(height: 12),
           Row(
             children: [
-              _metricCard(context, '✅', 'Всего', '$totalCompletions', Colors.green),
+              _metricCard(context, '✅', context.tr('total'), '$totalCompletions', Colors.green),
               const SizedBox(width: 12),
-              _metricCard(context, '🔥', 'Серия', '$longestStreak дн.', Colors.red),
+              _metricCard(context, '🔥', context.tr('streak'), '$longestStreak ${context.tr('streak_days')}', Colors.red),
             ],
           ),
 
           const SizedBox(height: 24),
 
           // График за неделю
-          _sectionHeader(context, 'Выполнение за неделю'),
+          _sectionHeader(context, context.tr('weekly_progress')),
           Card(
             child: Padding(
               padding: const EdgeInsets.all(16),
@@ -101,7 +102,7 @@ class StatsScreen extends StatelessWidget {
                             if (index >= 0 && index < weekData.length) {
                               final date = weekData[index]['date'] as DateTime;
                               return Text(
-                                DateFormat('E', 'ru').format(date),
+                                DateFormat('E', Localizations.localeOf(context).languageCode).format(date),
                                 style: const TextStyle(fontSize: 10),
                               );
                             }
@@ -139,7 +140,7 @@ class StatsScreen extends StatelessWidget {
           const SizedBox(height: 24),
 
           // График за месяц
-          _sectionHeader(context, 'Выполнение за месяц'),
+          _sectionHeader(context, context.tr('monthly_progress')),
           Card(
             child: Padding(
               padding: const EdgeInsets.all(16),
@@ -207,7 +208,7 @@ class StatsScreen extends StatelessWidget {
           const SizedBox(height: 24),
 
           // Категории
-          _sectionHeader(context, 'По категориям'),
+          _sectionHeader(context, context.tr('by_category')),
           Card(
             child: Padding(
               padding: const EdgeInsets.all(16),
@@ -231,7 +232,9 @@ class StatsScreen extends StatelessWidget {
                             Text(category.icon),
                             const SizedBox(width: 8),
                             Text(
-                              category.displayName,
+                              category.localizedDisplayName(
+                                Localizations.localeOf(context).languageCode,
+                              ),
                               style: theme.textTheme.bodyMedium?.copyWith(
                                 fontWeight: FontWeight.w500,
                               ),

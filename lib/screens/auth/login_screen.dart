@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../providers/auth_provider.dart';
+import '../../helpers/localization.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -34,7 +35,7 @@ class _LoginScreenState extends State<LoginScreen> {
     if (!success && mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(authProvider.errorMessage ?? 'Ошибка входа'),
+          content: Text(authProvider.errorMessage ?? context.tr('error_generic')),
           backgroundColor: Colors.red,
         ),
       );
@@ -61,7 +62,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  'Дневник эко-привычек',
+                  context.tr('login_title'),
                   style: theme.textTheme.headlineMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                     color: const Color(0xFF2E7D32),
@@ -69,7 +70,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'Войдите, чтобы продолжить',
+                  context.tr('login_subtitle'),
                   style: theme.textTheme.bodyLarge?.copyWith(
                     color: Colors.grey[600],
                   ),
@@ -84,16 +85,16 @@ class _LoginScreenState extends State<LoginScreen> {
                       TextFormField(
                         controller: _emailController,
                         keyboardType: TextInputType.emailAddress,
-                        decoration: const InputDecoration(
-                          labelText: 'Email',
+                        decoration: InputDecoration(
+                          labelText: context.tr('email'),
                           prefixIcon: Icon(Icons.email_outlined),
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Введите email';
+                            return context.tr('enter_email');
                           }
                           if (!value.contains('@')) {
-                            return 'Некорректный email';
+                            return context.tr('invalid_email');
                           }
                           return null;
                         },
@@ -103,7 +104,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         controller: _passwordController,
                         obscureText: _obscurePassword,
                         decoration: InputDecoration(
-                          labelText: 'Пароль',
+                          labelText: context.tr('password'),
                           prefixIcon: const Icon(Icons.lock_outline),
                           suffixIcon: IconButton(
                             icon: Icon(
@@ -120,7 +121,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
-                            return 'Введите пароль';
+                            return context.tr('enter_password');
                           }
                           return null;
                         },
@@ -146,8 +147,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                     color: Colors.white,
                                   ),
                                 )
-                              : const Text(
-                                  'Войти',
+                              : Text(
+                                  context.tr('login'),
                                   style: TextStyle(fontSize: 16),
                                 ),
                         ),
@@ -159,7 +160,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         onPressed: () {
                           Navigator.pushNamed(context, '/forgot-password');
                         },
-                        child: const Text('Забыли пароль?'),
+                        child: Text(context.tr('forgot_password')),
                       ),
                       const SizedBox(height: 16),
 
@@ -168,14 +169,14 @@ class _LoginScreenState extends State<LoginScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            'Нет аккаунта?',
+                            context.tr('no_account'),
                             style: TextStyle(color: Colors.grey[600]),
                           ),
                           TextButton(
                             onPressed: () {
                               Navigator.pushNamed(context, '/signup');
                             },
-                            child: const Text('Зарегистрироваться'),
+                            child: Text(context.tr('signup')),
                           ),
                         ],
                       ),

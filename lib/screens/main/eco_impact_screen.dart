@@ -4,6 +4,7 @@ import '../../providers/habit_provider.dart';
 import '../../services/impact_calc_service.dart';
 import '../../models/eco_impact.dart';
 import '../../models/habit_category.dart';
+import '../../helpers/localization.dart';
 
 class EcoImpactScreen extends StatelessWidget {
   const EcoImpactScreen({super.key});
@@ -19,14 +20,14 @@ class EcoImpactScreen extends StatelessWidget {
     final allImpact = impactCalc.calculateAllTimeImpact(habits);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Экологический эффект')),
+      appBar: AppBar(title: Text(context.tr('eco_impact'))),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
           // Общий эффект
           _impactCard(
             context,
-            '🌍 За всё время',
+            context.tr('all_time_with_emoji'),
             allImpact,
             impactCalc,
             const Color(0xFF2E7D32),
@@ -34,7 +35,7 @@ class EcoImpactScreen extends StatelessWidget {
           const SizedBox(height: 16),
           _impactCard(
             context,
-            '📅 За месяц',
+            context.tr('month_with_emoji'),
             monthImpact,
             impactCalc,
             Colors.blue,
@@ -42,7 +43,7 @@ class EcoImpactScreen extends StatelessWidget {
           const SizedBox(height: 16),
           _impactCard(
             context,
-            '📊 За неделю',
+            context.tr('week_with_emoji'),
             weekImpact,
             impactCalc,
             Colors.orange,
@@ -50,7 +51,7 @@ class EcoImpactScreen extends StatelessWidget {
           const SizedBox(height: 16),
           _impactCard(
             context,
-            '☀️ Сегодня',
+            context.tr('today_with_emoji'),
             todayImpact,
             impactCalc,
             Colors.purple,
@@ -59,7 +60,7 @@ class EcoImpactScreen extends StatelessWidget {
           const SizedBox(height: 32),
 
           // Визуальные эквиваленты
-          _sectionHeader(context, 'Визуальные эквиваленты'),
+          _sectionHeader(context, context.tr('visual_equivalents')),
           Card(
             child: Padding(
               padding: const EdgeInsets.all(16),
@@ -67,25 +68,25 @@ class EcoImpactScreen extends StatelessWidget {
                 children: [
                   _equivRow(
                     '🌳',
-                    'Деревьев (поглощение CO₂)',
+                    context.tr('trees_co2'),
                     impactCalc.co2ToTrees(allImpact.co2SavedKg).toStringAsFixed(1),
                   ),
                   const Divider(height: 24),
                   _equivRow(
                     '🚗',
-                    'Км на авто (эквивалент CO₂)',
+                    context.tr('car_km_co2'),
                     impactCalc.co2ToCarKm(allImpact.co2SavedKg).toStringAsFixed(0),
                   ),
                   const Divider(height: 24),
                   _equivRow(
                     '💡',
-                    'Часов работы LED-лампы',
+                    context.tr('led_hours'),
                     impactCalc.energyToLedHours(allImpact.energySavedKwh).toStringAsFixed(0),
                   ),
                   const Divider(height: 24),
                   _equivRow(
                     '🛁',
-                    'Ванн (эквивалент воды)',
+                    context.tr('baths_water'),
                     impactCalc.waterToBaths(allImpact.waterSavedLiters).toStringAsFixed(1),
                   ),
                 ],
@@ -96,7 +97,7 @@ class EcoImpactScreen extends StatelessWidget {
           const SizedBox(height: 32),
 
           // По категориям
-          _sectionHeader(context, 'По категориям'),
+          _sectionHeader(context, context.tr('by_category')),
           ..._buildCategoryImpact(context, habits, impactCalc),
         ],
       ),
@@ -129,8 +130,8 @@ class EcoImpactScreen extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                _statItem('💧', '${impact.waterSavedLiters.toStringAsFixed(0)} л', 'Воды'),
-                _statItem('⚡', '${impact.energySavedKwh.toStringAsFixed(1)} кВт·ч', 'Энергии'),
+                _statItem('💧', '${impact.waterSavedLiters.toStringAsFixed(0)} l', AppLocalizations.of(context).translate('water_short')),
+                _statItem('⚡', '${impact.energySavedKwh.toStringAsFixed(1)} kWh', AppLocalizations.of(context).translate('energy_short')),
                 _statItem('🌬️', '${impact.co2SavedKg.toStringAsFixed(1)} кг', 'CO₂'),
               ],
             ),
@@ -226,7 +227,11 @@ class EcoImpactScreen extends StatelessWidget {
         margin: const EdgeInsets.only(bottom: 8),
         child: ListTile(
           leading: Text(category.icon, style: const TextStyle(fontSize: 24)),
-          title: Text(category.displayName),
+          title: Text(
+            category.localizedDisplayName(
+              Localizations.localeOf(context).languageCode,
+            ),
+          ),
           subtitle: Text(
             '💧 ${impact.waterSavedLiters.toStringAsFixed(0)}л | ⚡ ${impact.energySavedKwh.toStringAsFixed(1)} | 🌬️ ${impact.co2SavedKg.toStringAsFixed(1)}кг',
           ),

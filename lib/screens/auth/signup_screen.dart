@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../providers/auth_provider.dart';
+import '../../helpers/localization.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -37,7 +38,7 @@ class _SignupScreenState extends State<SignupScreen> {
     if (!success && mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(authProvider.errorMessage ?? 'Ошибка регистрации'),
+          content: Text(authProvider.errorMessage ?? context.tr('error_generic')),
           backgroundColor: Colors.red,
         ),
       );
@@ -69,7 +70,7 @@ class _SignupScreenState extends State<SignupScreen> {
               ),
               const SizedBox(height: 16),
               Text(
-                'Создать аккаунт',
+                context.tr('signup_title'),
                 textAlign: TextAlign.center,
                 style: theme.textTheme.headlineMedium?.copyWith(
                   fontWeight: FontWeight.bold,
@@ -78,7 +79,7 @@ class _SignupScreenState extends State<SignupScreen> {
               ),
               const SizedBox(height: 8),
               Text(
-                'Присоединяйтесь к зелёному движению!',
+                context.tr('signup_subtitle'),
                 textAlign: TextAlign.center,
                 style: theme.textTheme.bodyLarge?.copyWith(
                   color: Colors.grey[600],
@@ -94,16 +95,16 @@ class _SignupScreenState extends State<SignupScreen> {
                     TextFormField(
                       controller: _emailController,
                       keyboardType: TextInputType.emailAddress,
-                      decoration: const InputDecoration(
-                        labelText: 'Email',
+                      decoration: InputDecoration(
+                        labelText: context.tr('email'),
                         prefixIcon: Icon(Icons.email_outlined),
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Введите email';
+                          return context.tr('enter_email');
                         }
                         if (!value.contains('@')) {
-                          return 'Некорректный email';
+                          return context.tr('invalid_email');
                         }
                         return null;
                       },
@@ -113,7 +114,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       controller: _passwordController,
                       obscureText: _obscurePassword,
                       decoration: InputDecoration(
-                        labelText: 'Пароль',
+                        labelText: context.tr('password'),
                         prefixIcon: const Icon(Icons.lock_outline),
                         suffixIcon: IconButton(
                           icon: Icon(
@@ -130,10 +131,10 @@ class _SignupScreenState extends State<SignupScreen> {
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Введите пароль';
+                          return context.tr('enter_password');
                         }
                         if (value.length < 6) {
-                          return 'Минимум 6 символов';
+                          return context.tr('min_6_chars');
                         }
                         return null;
                       },
@@ -143,7 +144,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       controller: _confirmPasswordController,
                       obscureText: _obscureConfirmPassword,
                       decoration: InputDecoration(
-                        labelText: 'Подтвердите пароль',
+                        labelText: context.tr('confirm_password'),
                         prefixIcon: const Icon(Icons.lock_outline),
                         suffixIcon: IconButton(
                           icon: Icon(
@@ -161,10 +162,10 @@ class _SignupScreenState extends State<SignupScreen> {
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Подтвердите пароль';
+                          return context.tr('confirm_password');
                         }
                         if (value != _passwordController.text) {
-                          return 'Пароли не совпадают';
+                          return context.tr('passwords_not_match');
                         }
                         return null;
                       },
@@ -190,8 +191,8 @@ class _SignupScreenState extends State<SignupScreen> {
                                   color: Colors.white,
                                 ),
                               )
-                            : const Text(
-                                'Зарегистрироваться',
+                            : Text(
+                                context.tr('signup'),
                                 style: TextStyle(fontSize: 16),
                               ),
                       ),
@@ -203,12 +204,12 @@ class _SignupScreenState extends State<SignupScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          'Уже есть аккаунт?',
+                          context.tr('already_have_account'),
                           style: TextStyle(color: Colors.grey[600]),
                         ),
                         TextButton(
                           onPressed: () => Navigator.pop(context),
-                          child: const Text('Войти'),
+                          child: Text(context.tr('login')),
                         ),
                       ],
                     ),

@@ -92,4 +92,20 @@ extension AchievementTierExtension on AchievementTier {
         return 'Алмаз';
     }
   }
+
+  String localizedDisplayName(String languageCode) {
+    final isEn = languageCode == 'en';
+    switch (this) {
+      case AchievementTier.bronze:
+        return isEn ? 'Bronze' : 'Бронза';
+      case AchievementTier.silver:
+        return isEn ? 'Silver' : 'Серебро';
+      case AchievementTier.gold:
+        return isEn ? 'Gold' : 'Золото';
+      case AchievementTier.platinum:
+        return isEn ? 'Platinum' : 'Платина';
+      case AchievementTier.diamond:
+        return isEn ? 'Diamond' : 'Алмаз';
+    }
+  }
 }

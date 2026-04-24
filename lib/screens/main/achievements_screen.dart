@@ -5,6 +5,7 @@ import '../../providers/stats_provider.dart';
 import '../../providers/auth_provider.dart';
 import '../../models/achievement.dart';
 import '../../data/achievement_catalog.dart';
+import '../../helpers/localization.dart';
 
 class AchievementsScreen extends StatefulWidget {
   const AchievementsScreen({super.key});
@@ -39,6 +40,7 @@ class _AchievementsScreenState extends State<AchievementsScreen> {
           context: context,
           builder: (context) => _AchievementUnlockDialog(
             achievement: unlocked.first,
+            languageCode: Localizations.localeOf(context).languageCode,
           ),
         );
       }
@@ -49,6 +51,7 @@ class _AchievementsScreenState extends State<AchievementsScreen> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final statsProvider = context.watch<StatsProvider>();
+    final lang = Localizations.localeOf(context).languageCode;
     final achievements = statsProvider.unlockedAchievements;
 
     // Группировать по уровням
@@ -62,12 +65,12 @@ class _AchievementsScreenState extends State<AchievementsScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Достижения'),
+        title: Text(context.tr('achievements')),
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
             onPressed: _checkAchievements,
-            tooltip: 'Проверить достижения',
+            tooltip: context.tr('achievements_check'),
           ),
         ],
       ),
@@ -81,7 +84,7 @@ class _AchievementsScreenState extends State<AchievementsScreen> {
               child: Column(
                 children: [
                   Text(
-                    'Ваш прогресс',
+                    context.tr('your_progress'),
                     style: theme.textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
@@ -92,17 +95,17 @@ class _AchievementsScreenState extends State<AchievementsScreen> {
                     children: [
                       _progressItem(
                         '🏆',
-                        'Разблокировано',
+                        context.tr('unlocked'),
                         '${achievements.length}',
                       ),
                       _progressItem(
                         '📋',
-                        'Всего',
+                        context.tr('total'),
                         '${AchievementCatalog.allAchievements.length}',
                       ),
                       _progressItem(
                         '📊',
-                        'Процент',
+                        context.tr('percent'),
                         '${(AchievementCatalog.allAchievements.isEmpty ? 0 : (achievements.length / AchievementCatalog.allAchievements.length) * 100).toStringAsFixed(0)}%',
                       ),
                     ],
@@ -139,7 +142,7 @@ class _AchievementsScreenState extends State<AchievementsScreen> {
                         borderRadius: BorderRadius.circular(16),
                       ),
                       child: Text(
-                        tier.displayName,
+                        tier.localizedDisplayName(lang),
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           color: _tierColor(tier),
@@ -161,7 +164,7 @@ class _AchievementsScreenState extends State<AchievementsScreen> {
                 itemCount: grouped[tier]!.length,
                 itemBuilder: (context, index) {
                   final achievement = grouped[tier]![index];
-                  return _achievementCard(achievement);
+                  return _achievementCard(achievement, lang);
                 },
               ),
             ],
@@ -171,7 +174,7 @@ class _AchievementsScreenState extends State<AchievementsScreen> {
     );
   }
 
-  Widget _achievementCard(Achievement achievement) {
+  Widget _achievementCard(Achievement achievement, String lang) {
     final theme = Theme.of(context);
 
     return Card(
@@ -189,7 +192,7 @@ class _AchievementsScreenState extends State<AchievementsScreen> {
             ),
             const SizedBox(height: 8),
             Text(
-              achievement.title,
+              AchievementCatalog.localizedTitle(achievement, lang),
               textAlign: TextAlign.center,
               style: theme.textTheme.bodySmall?.copyWith(
                 fontWeight: FontWeight.w600,
@@ -254,8 +257,12 @@ class _AchievementsScreenState extends State<AchievementsScreen> {
 
 class _AchievementUnlockDialog extends StatelessWidget {
   final Achievement achievement;
+  final String languageCode;
 
-  const _AchievementUnlockDialog({required this.achievement});
+  const _AchievementUnlockDialog({
+    required this.achievement,
+    required this.languageCode,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -271,8 +278,8 @@ class _AchievementUnlockDialog extends StatelessWidget {
               style: const TextStyle(fontSize: 64),
             ),
             const SizedBox(height: 16),
-            const Text(
-              '🎉 Новое достижение!',
+            Text(
+              AppLocalizations.of(context).translate('new_achievement'),
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
@@ -280,7 +287,7 @@ class _AchievementUnlockDialog extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              achievement.title,
+              AchievementCatalog.localizedTitle(achievement, languageCode),
               textAlign: TextAlign.center,
               style: const TextStyle(
                 fontSize: 16,
@@ -289,7 +296,7 @@ class _AchievementUnlockDialog extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              achievement.description,
+              AchievementCatalog.localizedDescription(achievement, languageCode),
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: Colors.grey[600],
@@ -302,7 +309,7 @@ class _AchievementUnlockDialog extends StatelessWidget {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
               ),
-              child: const Text('Отлично!'),
+              child: Text(AppLocalizations.of(context).translate('great')),
             ),
           ],
         ),
