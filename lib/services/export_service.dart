@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
@@ -37,7 +38,7 @@ class ExportService {
     required String languageCode,
   }) async {
     String t(String key) =>
-        AppLocalizations(Locale(languageCode)).translate(key);
+        AppLocalizations(Locale(languageCode)).translate(key); // Fixed: properly referencing AppLocalizations
 
     await _loadFonts();
     final pdf = pw.Document();

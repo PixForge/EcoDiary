@@ -97,7 +97,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       keyboardType: TextInputType.emailAddress,
                       decoration: InputDecoration(
                         labelText: context.tr('email'),
-                        prefixIcon: Icon(Icons.email_outlined),
+                        prefixIcon: const Icon(Icons.email_outlined),
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -193,7 +193,7 @@ class _SignupScreenState extends State<SignupScreen> {
                               )
                             : Text(
                                 context.tr('signup'),
-                                style: TextStyle(fontSize: 16),
+                                style: const TextStyle(fontSize: 16),
                               ),
                       ),
                     ),

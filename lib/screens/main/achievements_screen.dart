@@ -6,6 +6,7 @@ import '../../providers/auth_provider.dart';
 import '../../models/achievement.dart';
 import '../../data/achievement_catalog.dart';
 import '../../helpers/localization.dart';
+import '../../widgets/achievement_share_button.dart';
 
 class AchievementsScreen extends StatefulWidget {
   const AchievementsScreen({super.key});
@@ -33,18 +34,18 @@ class _AchievementsScreenState extends State<AchievementsScreen> {
       user.uid,
     );
 
-    if (unlocked.isNotEmpty && mounted) {
-      // Показать первое новое достижение
-      if (mounted) {
-        showDialog(
-          context: context,
-          builder: (context) => _AchievementUnlockDialog(
-            achievement: unlocked.first,
-            languageCode: Localizations.localeOf(context).languageCode,
-          ),
-        );
+      if (unlocked.isNotEmpty && mounted) {
+        // Показать первое новое достижение
+        if (mounted) {
+          showDialog(
+            context: context,
+            builder: (context) => AchievementUnlockDialog(
+              achievement: unlocked.first,
+              languageCode: Localizations.localeOf(context).languageCode,
+            ),
+          );
+        }
       }
-    }
   }
 
   @override
@@ -255,65 +256,3 @@ class _AchievementsScreenState extends State<AchievementsScreen> {
   }
 }
 
-class _AchievementUnlockDialog extends StatelessWidget {
-  final Achievement achievement;
-  final String languageCode;
-
-  const _AchievementUnlockDialog({
-    required this.achievement,
-    required this.languageCode,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Dialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
-      child: Padding(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              achievement.icon,
-              style: const TextStyle(fontSize: 64),
-            ),
-            const SizedBox(height: 16),
-            Text(
-              AppLocalizations.of(context).translate('new_achievement'),
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              AchievementCatalog.localizedTitle(achievement, languageCode),
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              AchievementCatalog.localizedDescription(achievement, languageCode),
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.grey[600],
-              ),
-            ),
-            const SizedBox(height: 24),
-            ElevatedButton(
-              onPressed: () => Navigator.pop(context),
-              style: ElevatedButton.styleFrom(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
-              ),
-              child: Text(AppLocalizations.of(context).translate('great')),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}

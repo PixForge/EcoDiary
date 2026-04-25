@@ -88,6 +88,23 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
+  Future<bool> deleteAccount() async {
+    _setLoading(true);
+    _clearError();
+    try {
+      await _authService.deleteAccount();
+      return true;
+    } on FirebaseAuthException catch (e) {
+      _setError(_mapAuthError(e.code));
+      return false;
+    } catch (e) {
+      _setError('Произошла ошибка. Попробуйте ещё раз');
+      return false;
+    } finally {
+      _setLoading(false);
+    }
+  }
+
   void _setLoading(bool value) {
     _isLoading = value;
     notifyListeners();
@@ -117,6 +134,8 @@ class AuthProvider extends ChangeNotifier {
         return 'Пароль должен содержать минимум 6 символов';
       case 'too-many-requests':
         return 'Слишком много попыток. Попробуйте позже';
+      case 'requires-recent-login':
+        return 'Нужен повторный вход для этой операции';
       default:
         return 'Произошла ошибка. Попробуйте ещё раз';
     }

@@ -98,18 +98,18 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                       ),
                       child: Column(
                         children: [
-                          Icon(Icons.check_circle, size: 48, color: Colors.green),
-                          SizedBox(height: 12),
+                          const Icon(Icons.check_circle, size: 48, color: Colors.green),
+                          const SizedBox(height: 12),
                           Text(
                             context.tr('email_sent_success'),
                             textAlign: TextAlign.center,
-                            style: TextStyle(
+                            style: const TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                               color: Colors.green,
                             ),
                           ),
-                          SizedBox(height: 8),
+                          const SizedBox(height: 8),
                           Text(
                             context.tr('email_sent_desc'),
                             textAlign: TextAlign.center,
@@ -141,7 +141,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                         keyboardType: TextInputType.emailAddress,
                         decoration: InputDecoration(
                           labelText: context.tr('email'),
-                          prefixIcon: Icon(Icons.email_outlined),
+                          prefixIcon: const Icon(Icons.email_outlined),
                         ),
                         validator: (value) {
                           if (value == null || value.isEmpty) {
@@ -174,7 +174,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                 )
                               : Text(
                                   context.tr('send_email'),
-                                  style: TextStyle(fontSize: 16),
+                                  style: const TextStyle(fontSize: 16),
                                 ),
                         ),
                       ),

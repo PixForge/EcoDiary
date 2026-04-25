@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/habit.dart';
 import '../models/user_profile.dart';
 import '../models/achievement.dart';
+import '../services/friends_service.dart';
 
 /// Сервис работы с Cloud Firestore
 class FirestoreService {
@@ -48,6 +49,13 @@ class FirestoreService {
     final doc = await _profileDoc(uid).get();
     if (!doc.exists) return null;
     return UserProfile.fromMap(doc.data()!);
+  }
+
+  Future<void> updateProfileFields(
+    String uid,
+    Map<String, dynamic> fields,
+  ) async {
+    await _profileDoc(uid).set(fields, SetOptions(merge: true));
   }
 
   // ========== ПРИВЫЧКИ ==========
@@ -119,6 +127,20 @@ class FirestoreService {
         .toList();
   }
 
+  Future<Map<String, dynamic>> exportUserData(String uid) async {
+    final profileDoc = await _profileDoc(uid).get();
+    final habitsSnapshot = await _habitsCollection(uid).get();
+    final achievementsSnapshot = await _achievementsCollection(uid).get();
+
+    return {
+      'exportedAt': DateTime.now().toIso8601String(),
+      'uid': uid,
+      'profile': profileDoc.data(),
+      'habits': habitsSnapshot.docs.map((d) => d.data()).toList(),
+      'achievements': achievementsSnapshot.docs.map((d) => d.data()).toList(),
+    };
+  }
+
   // ========== СИНХРОНИЗАЦИЯ ==========
 
   /// Пакетное обновление привычек (для офлайн-синхронизации)
@@ -132,5 +154,19 @@ class FirestoreService {
       batch.set(docRef, habit.toMap(), SetOptions(merge: true));
     }
     await batch.commit();
+  }
+
+  /// Синхронизировать профиль пользователя у всех его друзей
+  Future<void> syncProfileWithFriends({
+    required String userId,
+    required String displayName,
+    required String avatarBase64,
+  }) async {
+    final friendsService = FriendsService();
+    await friendsService.syncProfileWithFriends(
+      userId: userId,
+      displayName: displayName,
+      avatarBase64: avatarBase64,
+    );
   }
 }

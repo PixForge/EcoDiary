@@ -10,9 +10,16 @@
 - **Ежедневный чек-лист** — отмечайте привычки одним касанием
 - **Напоминания** — push-уведомления в заданное время
 - **Статистика** — графики выполнения за неделю и месяц, серии, процент выполнения
-- **Расчёт экологического эффекта** — вода, энергия, CO₂ с наглядными эквивалентами
+- **Расчёт экологического эффекта** — вода, энергия, CO₂ с конвертацией в наглядные эквиваленты
 - **Система достижений** — 24 достижения с анимациями разблокировки
-- **Профиль и настройки** — тема, уведомления, пароль
+- **Профиль и настройки** — тема, уведомления, язык, пароль
+
+### Социальные функции
+- **Друзья** — поиск по email/нику, отправка и принятие заявок в друзья
+- **Лента друзей** — просмотр прогресса друзей: серии, процент выполнения, новые достижения
+- **Таблица лидеров** — рейтинг по недельному/месячному прогрессу среди друзей
+- **Шеринг достижений** — кнопка «Поделиться» на карточке достижения (в соцсети, мессенджеры)
+- **Командные челленджи** — создание челленджей (до 5 участников), общий прогресс
 
 ## Архитектура проекта
 
@@ -26,7 +33,10 @@ lib/
 │   ├── achievement.dart          # Достижение
 │   ├── eco_impact.dart           # Экологический эффект
 │   ├── user_profile.dart         # Профиль пользователя
-│   └── day_record.dart           # Запись за день
+│   ├── day_record.dart           # Запись за день
+│   ├── friend.dart               # Друг и статистика
+│   ├── friend_request.dart       # Заявка в друзья
+│   └── challenge.dart            # Командный челлендж
 ├── data/                         # Статические данные
 │   ├── habit_catalog.dart        # Каталог 52 привычек
 │   └── achievement_catalog.dart  # Каталог 23 достижений
@@ -35,12 +45,16 @@ lib/
 │   ├── firestore_service.dart    # Работа с БД
 │   ├── notification_service.dart # Уведомления
 │   ├── impact_calc_service.dart  # Расчёт эко-эффекта
-│   └── export_service.dart       # Экспорт в PDF
+│   ├── export_service.dart       # Экспорт в PDF
+│   ├── friends_service.dart      # Управление друзьями
+│   ├── challenges_service.dart   # Управление челленджами
+│   └── sharing_service.dart      # Шеринг в соцсети
 ├── providers/                    # Провайдеры состояния
 │   ├── auth_provider.dart        # Авторизация
 │   ├── habit_provider.dart       # Привычки
 │   ├── stats_provider.dart       # Статистика и достижения
-│   └── theme_provider.dart       # Тема и язык
+│   ├── theme_provider.dart       # Тема и язык
+│   └── social_provider.dart      # Социальные функции
 ├── screens/                      # Экраны
 │   ├── auth/                     # Авторизация
 │   │   ├── login_screen.dart
@@ -55,9 +69,18 @@ lib/
 │       ├── eco_impact_screen.dart
 │       ├── achievements_screen.dart
 │       ├── profile_screen.dart
-│       └── export_screen.dart
+│       ├── export_screen.dart
+│       ├── friends_screen.dart        # Друзья и заявки
+│       ├── friends_feed_screen.dart   # Лента друзей
+│       ├── leaderboard_screen.dart    # Таблица лидеров
+│       ├── challenges_screen.dart     # Челленджи
+│       └── create_challenge_screen.dart
 ├── widgets/                      # Виджеты
-│   └── habit_tile.dart
+│   ├── habit_tile.dart
+│   ├── friend_tile.dart          # Карточка друга
+│   ├── friend_request_tile.dart  # Заявка в друзья
+│   ├── challenge_card.dart       # Карточка челленджа
+│   └── achievement_share_button.dart
 └── helpers/                      # Вспомогательные модули
     ├── localization.dart
     └── routes.dart
@@ -75,6 +98,8 @@ lib/
 | PDF | pdf + printing |
 | Локальное хранилище | shared_preferences |
 | State Management | Provider |
+| Шеринг | share_plus + path_provider |
+| Календарь | table_calendar |
 
 ## Методика расчёта экологического эффекта
 

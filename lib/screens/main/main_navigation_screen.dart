@@ -3,6 +3,7 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'home_screen.dart';
 import 'catalog_screen.dart';
 import 'stats_screen.dart';
+import 'friends_screen.dart';
 
 // Глобальный ключ для доступа к состоянию навигации из любого места
 final GlobalKey<MainNavigationScreenState> navigationKey =
@@ -22,6 +23,7 @@ class MainNavigationScreenState extends State<MainNavigationScreen> {
     const HomeScreen(),
     const CatalogScreen(),
     const StatsScreen(),
+    const FriendsScreen(),
   ];
 
   // Метд для переключения вкладок извне
@@ -61,6 +63,7 @@ class MainNavigationScreenState extends State<MainNavigationScreen> {
           Icon(Icons.home_outlined, size: 30, color: Colors.white),
           Icon(Icons.add_circle_outline, size: 30, color: Colors.white),
           Icon(Icons.bar_chart_outlined, size: 30, color: Colors.white),
+          Icon(Icons.people_outline, size: 30, color: Colors.white),
         ],
       ),
     );

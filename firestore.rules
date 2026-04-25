@@ -5,5 +5,49 @@ service cloud.firestore {
     match /users/{userId}/{document=**} {
       allow read, write: if request.auth != null && request.auth.uid == userId;
     }
+    
+    // Заявки в друзья
+    match /friend_requests/{requestId} {
+      // Чтение: если ты отправитель или получатель
+      allow read: if request.auth != null && 
+        (request.auth.uid == resource.data.senderId || 
+         request.auth.uid == resource.data.receiverId);
+      // Создание: только авторизованные пользователи
+      allow create: if request.auth != null;
+      // Обновление: только получатель может принять/отклонить
+      allow update: if request.auth != null && 
+        request.auth.uid == resource.data.receiverId;
+    }
+    
+    // Друзья (подколлекция в users)
+    match /users/{userId}/friends/{friendId} {
+      allow read: if request.auth != null && request.auth.uid == userId;
+      allow write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // Челленджи
+    match /challenges/{challengeId} {
+      // Чтение: если ты участник или создатель
+      allow read: if request.auth != null && 
+        (request.auth.uid == resource.data.creatorId ||
+         request.auth.uid in resource.data.participantIds);
+      // Создание: только авторизованные
+      allow create: if request.auth != null;
+      // Обновление: только создатель
+      allow update: if request.auth != null && 
+        request.auth.uid == resource.data.creatorId;
+      // Удаление: только создатель
+      allow delete: if request.auth != null && 
+        request.auth.uid == resource.data.creatorId;
+    }
+    
+    // Прогресс в челленджах
+    match /challenge_progress/{progressId} {
+      // Чтение: если ты участник челленджа
+      allow read: if request.auth != null;
+      // Создание/обновление: только владелец прогресса
+      allow create, update: if request.auth != null && 
+        request.auth.uid == resource.data.participantId;
+    }
   }
 }

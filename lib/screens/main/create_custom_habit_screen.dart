@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:uuid/uuid.dart';
-import '../../models/habit.dart';
 import '../../models/habit_category.dart';
 import '../../providers/habit_provider.dart';
 import '../../helpers/localization.dart';
@@ -122,7 +120,7 @@ class _CreateCustomHabitScreenState extends State<CreateCustomHabitScreen> {
                       controller: _titleController,
                       decoration: InputDecoration(
                         hintText: context.tr('habit_name_hint'),
-                        border: OutlineInputBorder(),
+                        border: const OutlineInputBorder(),
                       ),
                       validator: (value) {
                         if (value == null || value.trim().isEmpty) {
@@ -156,7 +154,7 @@ class _CreateCustomHabitScreenState extends State<CreateCustomHabitScreen> {
                       controller: _descriptionController,
                       decoration: InputDecoration(
                         hintText: context.tr('description_hint'),
-                        border: OutlineInputBorder(),
+                        border: const OutlineInputBorder(),
                       ),
                       maxLines: 3,
                     ),
@@ -270,13 +268,13 @@ class _CreateCustomHabitScreenState extends State<CreateCustomHabitScreen> {
                     Wrap(
                       spacing: 8,
                       children: [
-                        _dayChip(context.tr('day_mon'), 1),
-                        _dayChip(context.tr('day_tue'), 2),
-                        _dayChip(context.tr('day_wed'), 3),
-                        _dayChip(context.tr('day_thu'), 4),
-                        _dayChip(context.tr('day_fri'), 5),
-                        _dayChip(context.tr('day_sat'), 6),
-                        _dayChip(context.tr('day_sun'), 7),
+                        _dayChip(context.tr('day_mon_short'), 1),
+                        _dayChip(context.tr('day_tue_short'), 2),
+                        _dayChip(context.tr('day_wed_short'), 3),
+                        _dayChip(context.tr('day_thu_short'), 4),
+                        _dayChip(context.tr('day_fri_short'), 5),
+                        _dayChip(context.tr('day_sat_short'), 6),
+                        _dayChip(context.tr('day_sun_short'), 7),
                       ],
                     ),
                   ],
@@ -349,7 +347,7 @@ class _CreateCustomHabitScreenState extends State<CreateCustomHabitScreen> {
               ),
               child: Text(
                 context.tr('create_habit'),
-                style: TextStyle(fontSize: 16),
+                style: const TextStyle(fontSize: 16),
               ),
             ),
           ],

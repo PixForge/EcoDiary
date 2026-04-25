@@ -8,7 +8,9 @@ import 'providers/auth_provider.dart';
 import 'providers/habit_provider.dart';
 import 'providers/stats_provider.dart';
 import 'providers/theme_provider.dart';
+import 'providers/social_provider.dart';
 import 'screens/auth/login_screen.dart';
+import 'services/sharing_service.dart';
 import 'screens/auth/signup_screen.dart';
 import 'screens/auth/forgot_password_screen.dart';
 import 'screens/main/main_navigation_screen.dart';
@@ -54,6 +56,8 @@ class EcoHabitDiaryApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => HabitProvider()),
         ChangeNotifierProvider(create: (_) => StatsProvider()),
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
+        ChangeNotifierProvider(create: (_) => SocialProvider()),
+        Provider(create: (_) => SharingService()),
       ],
       child: Consumer<ThemeProvider>(
         builder: (context, themeProvider, child) {

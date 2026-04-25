@@ -7,6 +7,8 @@ class UserProfile {
   final String languageCode;
   final bool isDarkMode;
   final DateTime createdAt;
+  final String avatarBase64;
+  final String progressVisibility; // public | friends | private
 
   UserProfile({
     required this.uid,
@@ -15,6 +17,8 @@ class UserProfile {
     this.notificationsEnabled = true,
     this.languageCode = 'ru',
     this.isDarkMode = false,
+    this.avatarBase64 = '',
+    this.progressVisibility = 'public',
     DateTime? createdAt,
   }) : createdAt = createdAt ?? DateTime.now();
 
@@ -25,6 +29,8 @@ class UserProfile {
     bool? notificationsEnabled,
     String? languageCode,
     bool? isDarkMode,
+    String? avatarBase64,
+    String? progressVisibility,
     DateTime? createdAt,
   }) {
     return UserProfile(
@@ -34,6 +40,8 @@ class UserProfile {
       notificationsEnabled: notificationsEnabled ?? this.notificationsEnabled,
       languageCode: languageCode ?? this.languageCode,
       isDarkMode: isDarkMode ?? this.isDarkMode,
+      avatarBase64: avatarBase64 ?? this.avatarBase64,
+      progressVisibility: progressVisibility ?? this.progressVisibility,
       createdAt: createdAt ?? this.createdAt,
     );
   }
@@ -46,6 +54,8 @@ class UserProfile {
       'notificationsEnabled': notificationsEnabled,
       'languageCode': languageCode,
       'isDarkMode': isDarkMode,
+      'avatarBase64': avatarBase64,
+      'progressVisibility': progressVisibility,
       'createdAt': createdAt.toIso8601String(),
     };
   }
@@ -58,6 +68,8 @@ class UserProfile {
       notificationsEnabled: map['notificationsEnabled'] as bool? ?? true,
       languageCode: map['languageCode'] as String? ?? 'ru',
       isDarkMode: map['isDarkMode'] as bool? ?? false,
+      avatarBase64: map['avatarBase64'] as String? ?? '',
+      progressVisibility: map['progressVisibility'] as String? ?? 'public',
       createdAt: map['createdAt'] != null
           ? DateTime.parse(map['createdAt'] as String)
           : DateTime.now(),

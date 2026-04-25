@@ -159,13 +159,13 @@ class _HabitDetailScreenState extends State<HabitDetailScreen> {
                     ),
                     const SizedBox(height: 12),
                     if (widget.habit.waterSavedLiters > 0)
-                      _impactRow('${context.tr('water_saved_full')}',
+                      _impactRow(context.tr('water_saved_full'),
                           '${widget.habit.waterSavedLiters.toStringAsFixed(0)} л'),
                     if (widget.habit.energySavedKwh > 0)
-                      _impactRow('${context.tr('energy_saved_full')}',
+                      _impactRow(context.tr('energy_saved_full'),
                           '${widget.habit.energySavedKwh.toStringAsFixed(1)} кВт·ч'),
                     if (widget.habit.co2SavedKg > 0)
-                      _impactRow('${context.tr('co2_prevented_full')}',
+                      _impactRow(context.tr('co2_prevented_full'),
                           '${widget.habit.co2SavedKg.toStringAsFixed(1)} кг'),
                   ],
                 ),
@@ -269,7 +269,7 @@ class _HabitDetailScreenState extends State<HabitDetailScreen> {
             ),
             child: Text(
               context.tr('add_habit'),
-              style: TextStyle(fontSize: 16),
+              style: const TextStyle(fontSize: 16),
             ),
           ),
         ],

@@ -1,9 +1,10 @@
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../models/habit.dart';
 import '../models/habit_category.dart';
 import '../services/firestore_service.dart';
 import '../services/notification_service.dart';
+import '../helpers/localization.dart';
 
 class HabitProvider extends ChangeNotifier {
   final FirestoreService _firestoreService = FirestoreService();
@@ -81,7 +82,7 @@ class HabitProvider extends ChangeNotifier {
   }) async {
     final user = _auth.currentUser;
     if (user == null) {
-      _errorMessage = 'Пользователь не авторизован';
+      _errorMessage = AppLocalizations(const Locale('ru')).translate('user_not_authenticated');
       notifyListeners();
       return false;
     }
