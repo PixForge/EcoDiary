@@ -1,33 +1,112 @@
-# Flutter
-.dart_tool/
-.packages
-build/
-*.iml
-lib/firebase_options.dart
+```
+# Firebase
+.firebaserc
+firebase-debug.log*
+*.rules
 
-# Android
-.gradle/
-android/app/google-services.json
-local.properties
+# Dependencies
+node_modules/
 
-# iOS
-ios/Flutter/Debug.xcconfig
-ios/Flutter/Release.xcconfig
-ios/Runner.xcworkspace/
-ios/Runner.xcodeproj/
-GoogleService-Info.plist
+# Environment variables
+.env
+.env.local
+.env.*
 
-# IDE
-.idea/
-*.code-workspace
+# Logs
+*.log
+
+# Editor/IDE
 .vscode/
+.idea/
+*.swp
+*.swo
+*.tmp
 
 # OS
 .DS_Store
 Thumbs.db
 
-# Firebase
-firebase-debug.log
+# Build outputs
+dist/
+build/
+target/
+*.out
+*.exe
+*.dll
+*.so
+*.a
 
-# PDF exports
-*.pdf
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+.eggs/
+.coverage
+htmlcov/
+.coverage.*
+.mypy_cache/
+.pytest_cache/
+.tox/
+.nox/
+
+# Java
+*.class
+*.jar
+*.war
+*.ear
+*.war
+*.sar
+*.nar
+*.klib
+target/
+.gradle/
+build/
+
+# C/C++
+*.o
+*.obj
+*.a
+*.lib
+*.so
+*.dylib
+*.dll
+*.exe
+*.out
+
+# Compressed files
+*.zip
+*.gz
+*.tar
+*.tgz
+*.bz2
+*.xz
+*.7z
+*.rar
+*.zst
+*.lz4
+*.lzh
+*.cab
+*.arj
+*.rpm
+*.deb
+*.Z
+*.lz
+*.lzo
+*.tar.gz
+*.tar.bz2
+*.tar.xz
+*.tar.zst
+
+# Coverage
+coverage/
+htmlcov/
+*.coverage
+
+# General temp files
+*.tmp
+*~
+.DS_Store
+```
