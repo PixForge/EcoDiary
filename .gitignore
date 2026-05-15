@@ -1,33 +1,37 @@
-# Flutter
+```
+# Dependency directories
 .dart_tool/
-.packages
-build/
-*.iml
-lib/firebase_options.dart
+.build/
+dependencies/
 
-# Android
-.gradle/
-android/app/google-services.json
-local.properties
+# Compiled and build artifacts
+*.dart.js
+*.js.map
+*.part.js
+*.part.js.map
+*.vm.dart
+*.flow
+*.g.dart
+*.freezed.dart
 
-# iOS
-ios/Flutter/Debug.xcconfig
-ios/Flutter/Release.xcconfig
-ios/Runner.xcworkspace/
-ios/Runner.xcodeproj/
-GoogleService-Info.plist
+# Logs and temp files
+*.log
+*.tmp
+*.swp
 
-# IDE
-.idea/
-*.code-workspace
+# Environment
+.env
+.env.local
+*.env.*
+
+# Editors
 .vscode/
+.idea/
+*.iml
+*.ipr
+*.iws
 
-# OS
+# OS generated files
 .DS_Store
 Thumbs.db
-
-# Firebase
-firebase-debug.log
-
-# PDF exports
-*.pdf
+```

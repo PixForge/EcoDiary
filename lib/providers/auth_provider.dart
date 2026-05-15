@@ -1,6 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../services/auth_service.dart';
+import '../services/firestore_service.dart';
+import '../models/user_profile.dart';
 
 class AuthProvider extends ChangeNotifier {
   final AuthService _authService = AuthService();
@@ -49,7 +51,19 @@ class AuthProvider extends ChangeNotifier {
     _setLoading(true);
     _clearError();
     try {
-      await _authService.signUp(email: email, password: password);
+      final credential = await _authService.signUp(email: email, password: password);
+      
+      // Создаем профиль пользователя в Firestore после успешной регистрации
+      final user = credential.user;
+      if (user != null) {
+        final profile = UserProfile(
+          uid: user.uid,
+          email: user.email ?? email,
+          displayName: '',
+        );
+        await FirestoreService().saveProfile(profile);
+      }
+      
       return true;
     } on FirebaseAuthException catch (e) {
       _setError(_mapAuthError(e.code));

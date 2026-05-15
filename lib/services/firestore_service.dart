@@ -18,7 +18,7 @@ class FirestoreService {
 
   /// Ссылка на документ профиля
   DocumentReference<Map<String, dynamic>> _profileDoc(String uid) {
-    return _users.doc(uid).collection('profile').doc('data');
+    return _users.doc(uid);
   }
 
   /// Ссылка на коллекцию достижений
