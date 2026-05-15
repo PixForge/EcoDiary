@@ -68,9 +68,13 @@ class FriendsService {
 
   /// Получить профиль пользователя по UID
   Future<UserProfile?> getUserProfile(String uid) async {
-    final doc = await _users.doc(uid).collection('profile').doc('data').get();
+    final doc = await _users.doc(uid).get();
     if (!doc.exists) return null;
-    return UserProfile.fromMap(doc.data()!);
+    final data = doc.data()!;
+    return UserProfile.fromMap({
+      ...data,
+      'createdAt': data['createdAt'] ?? DateTime.now().toIso8601String(),
+    });
   }
 
   // ========== ЗАЯВКИ В ДРУЗЬЯ ==========

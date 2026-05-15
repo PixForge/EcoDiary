@@ -1,10 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/challenge.dart';
 import '../models/friend.dart';
+import '../models/user_profile.dart';
 
 /// Сервис управления командными челленджами
 class ChallengesService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
+
+  /// Коллекция пользователей
+  CollectionReference<Map<String, dynamic>> get _users => _db.collection('users');
 
   /// Коллекция челленджей
   CollectionReference<Map<String, dynamic>> get _challenges =>
@@ -222,8 +226,7 @@ class ChallengesService {
     required LeaderboardPeriod period,
   }) async {
     // Получаем список друзей
-    final friendsSnapshot = await _db
-        .collection('users')
+    final friendsSnapshot = await _users
         .doc(userId)
         .collection('friends')
         .get();
